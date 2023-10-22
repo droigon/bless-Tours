@@ -58,6 +58,7 @@ export const OPTIONS: any = {
         console.log("credentials", credentials);
         const { role, email, password } = credentials;
         const roleParam = role !== "null" ? `${role}` : "users";
+        //const api = `http://0.0.0.0.:3000/api/v1/${roleParam}/signin`;
         const api = `https://blesstours.onrender.com/api/v1/${roleParam}/signin`;
 
         const res = await fetch(api, {
@@ -66,7 +67,7 @@ export const OPTIONS: any = {
           headers: { "Content-Type": "application/json" },
         });
         const user = await res.json();
-        //console.log("user", user);
+        console.log("user", user);
 
         // If no error and we have user data, return it
         if (res.ok && user) {
@@ -117,6 +118,9 @@ export const OPTIONS: any = {
         session.user = { ...token };
       }
       if (session?.vendor) {
+        session.vendor = { ...token };
+      }
+      if (session?.admin) {
         session.vendor = { ...token };
       }
 

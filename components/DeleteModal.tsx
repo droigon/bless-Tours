@@ -34,7 +34,9 @@ const DeleteModal: React.FC<DeleteModalProps> = ({ isOpen, onClose, onDelete,ite
                   initialOpen={true}>
                   <div className="pt-4 lg:pt-6">
                     <p className="clr-neutral-500 mb-4">
-                    When you remove this tour listing, it will no longer be available for bookings, and we will permanently remove its information from our records. Please note that this action is irreversible.
+                    When you remove this tour listing, it will no longer be available for bookings,
+                    <br/> and we will permanently remove its information from our records.
+                    <br/> Please note that this action is irreversible.
                     </p>
                     <div className="mb-8">
                       <CheckboxCustom label="Confirm that I want to delete my tour." />

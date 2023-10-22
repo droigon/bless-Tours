@@ -159,12 +159,7 @@ const Page = () => {
                     placeholder="Write your bio"
                     className="border w-full focus:outline-none py-3 px-6 rounded-2xl"></textarea>
                 </div>
-                <div className="col-span-12">
-                  <div className="flex flex-col gap-3">
-                    <CheckboxCustom label="I agree to the privacy & policy" />
-                    <CheckboxCustom label="I agree with all terms & conditions" />
-                  </div>
-                </div>
+                
 
                 <div className="col-span-12">
                   <div className="flex items-center gap-6 flex-wrap">

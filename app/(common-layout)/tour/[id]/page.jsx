@@ -13,7 +13,7 @@ export default async function UserPage({params: {id}}) {
     //const userPosts = getUserPosts(id)
 
  
- 
+  
 
     return (
         <div>

@@ -23,11 +23,11 @@ export default function RootLayout({ children }: IProps) {
       
       <body
         className={`${inter.className} bg-[var(--bg-1)] text-[var(--neutral-700)]`}>
-          
-          <AuthProvider>
-          {children}
-          </AuthProvider>
         
+          <AuthProvider>
+            {children}
+          </AuthProvider>
+       
       </body>
     </html>
   );

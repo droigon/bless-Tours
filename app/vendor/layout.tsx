@@ -138,9 +138,9 @@ export default function RootLayout({
               </li>
               <li>
                 <Link
-                  href="/vendor/vendor-bookings"
+                  href="/vendor/bookings"
                   className={`flex items-center gap-2 rounded-md px-6 py-3 duration-300 ${
-                    path == "/vendor/vendor-bookings" && "bg-primary text-white"
+                    path == "/vendor/bookings" && "bg-primary text-white"
                   }`}>
                   <TicketIcon className="w-5 h-5" />
                   Bookings
@@ -156,16 +156,7 @@ export default function RootLayout({
                   Activities
                 </Link>
               </li>
-              <li>
-                <Link
-                  href="/vendor/vendor-earnings"
-                  className={`flex items-center gap-2 rounded-md px-6 py-3 duration-300 ${
-                    path == "/vendor/vendor-earnings" && "bg-primary text-white"
-                  }`}>
-                  <CurrencyDollarIcon className="w-5 h-5" />
-                  Earnings
-                </Link>
-              </li>
+              
               <li>
                 <Link
                   href="/vendor/vendor-reviews"

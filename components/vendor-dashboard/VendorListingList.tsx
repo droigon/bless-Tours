@@ -17,7 +17,7 @@ const VendorListingList = ({ item }: any) => {
   const [token, setToken] = useState("");
   const { _id,NAME, LOCATION,DESCRIPTION,img, AMOUNT, rating, name } = item;
   const { data: session } = useSession();
- 
+  
 
   const handleDelete = async (itemId:string) => {
     console.log(itemId)

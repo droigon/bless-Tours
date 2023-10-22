@@ -13,10 +13,14 @@ import {
 } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
+import React, { useRef, useEffect } from "react";
 import { Tooltip } from "react-tooltip";
 import DatePicker from "react-datepicker";
 import { useState } from "react";
 import CheckboxCustom from "@/components/Checkbox";
+import { useRouter } from "next/navigation";
+import { useAppContext } from '@/providers/BookProvider';
+
 function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(" ");
 }
@@ -27,8 +31,14 @@ const tooltipStyle = {
   borderRadius: "10px",
 };
 
+type FormInputs = {
+  guests: number;
+  location: string;
+  dateRange: string;
+};
 
 type PostProps = {
+  _id: string;
   ID: number;
   REFUND_POLICY:string;
   CANCELLATION_POLICY:string;
@@ -44,23 +54,72 @@ type PostProps = {
 };
 
 
+
+
 const Page: React.FC<{ promise: Promise<PostProps> }> = ({ promise }) => {
   const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([null, null]);
   const [startDate, endDate] = dateRange;
   const [post, setPost] = useState<PostProps | null>(null);
+  
+  const { setGuests, setLocation, setTourID } = useAppContext();
+  
+  const router = useRouter();
 
-  const fetchPosts = async () => {
-    try {
-      const posts = await promise;
-      //const { NAME, DESCRIPTION, PRICE } = posts;
-      setPost(posts)
-      console.log("Posts:", posts);
-    } catch (error) {
-      console.error("Error fetching posts:", error);
+  const process = async () => {
+    
+    setGuests(data.current.guests)
+    setLocation(data.current.location)
+    setTourID(post?._id || "")
+
+    if (!data.current.location || data.current.location==="") {
+      // Throw an error if location is empty
+      throw new Error('Location cannot be empty.');
     }
+    
+    console.log("routing")
+    router.push('/booking/book-tour');
+
   };
 
-  fetchPosts();
+  const data = useRef<FormInputs>({
+    guests:1,
+    location:"",
+    dateRange:"",
+  });
+
+ 
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const posts = await promise;
+        //const { NAME, DESCRIPTION, PRICE } = posts;
+        setPost(posts)
+        console.log("Posts:", posts);
+      } catch (error) {
+        console.error("Error fetching posts:", error);
+      }
+    };
+  
+    fetchPosts();
+  }, []);
+  
+
+
+  //const fetchPosts = async () => {
+  //  try {
+  //    const posts = await promise;
+  //    //const { NAME, DESCRIPTION, PRICE } = posts;
+  //    setPost(posts)
+  //    console.log("Posts:", posts);
+  //  } catch (error) {
+  //    console.error("Error fetching posts:", error);
+  //  }
+  //};
+
+  //fetchPosts();
+
+  
 
   return (
     <main>
@@ -567,7 +626,9 @@ const Page: React.FC<{ promise: Promise<PostProps> }> = ({ promise }) => {
                             <div className="w-full flex">
                               <input
                                 type="text"
+                                required
                                 className="w-[83%] min-[400px]:w-full focus:outline-none bg-[var(--bg-2)] border border-r-0 border-neutral-40 rounded-s-full rounded-end-0 py-3 px-5"
+                                onChange={(e) => (data.current.location = e.target.value)}
                                 placeholder="Location"
                               />
                               <span className="bg-[var(--bg-2)] border border-l-0 border-neutral-40 rounded-e-full py-[14px] text-gray-500 pe-4 ps-0">
@@ -580,6 +641,7 @@ const Page: React.FC<{ promise: Promise<PostProps> }> = ({ promise }) => {
                               <DatePicker
                                 placeholderText="Check In - Check Out"
                                 selectsRange={true}
+                                required
                                 startDate={startDate}
                                 dateFormat="dd-MM-yyyy"
                                 endDate={endDate}
@@ -594,7 +656,9 @@ const Page: React.FC<{ promise: Promise<PostProps> }> = ({ promise }) => {
                           <div className="col-span-1">
                             <div className="w-full flex">
                               <input
-                                type="text"
+                                type="number"
+                                required
+                                onChange={(e) => (data.current.guests = e.target.valueAsNumber)}
                                 className="w-[83%] min-[400px]:w-full focus:outline-none bg-[var(--bg-2)] border border-r-0 border-neutral-40 rounded-s-full rounded-end-0 py-3 px-5"
                                 placeholder="Guest"
                               />
@@ -604,30 +668,7 @@ const Page: React.FC<{ promise: Promise<PostProps> }> = ({ promise }) => {
                             </div>
                           </div>
                         </div>
-                        <div className="flex items-center justify-between mb-4">
-                          <p className="mb-0 clr-neutral-500"> Base Price </p>
-                          <p className="mb-0 font-medium"> $360 </p>
-                        </div>
-                        <div className="flex items-center justify-between mb-4">
-                          <p className="mb-0 clr-neutral-500"> State Tax </p>
-                          <p className="mb-0 font-medium"> $70 </p>
-                        </div>
-                        <div className="flex items-center justify-between mb-4">
-                          <p className="mb-0 clr-neutral-500"> Night Charge </p>
-                          <p className="mb-0 font-medium"> $170 </p>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <p className="mb-0 clr-neutral-500">
-                            {" "}
-                            Convenience Fee{" "}
-                          </p>
-                          <p className="mb-0 font-medium"> $15 </p>
-                        </div>
-                        <div className="hr-dashed my-4"></div>
-                        <div className="flex items-center justify-between ">
-                          <p className="mb-0 clr-neutral-500"> Total </p>
-                          <p className="mb-0 font-medium"> $1025 </p>
-                        </div>
+                       
                       </Tab.Panel>
                       <Tab.Panel>
                         <form className="flex flex-col gap-5">
@@ -653,11 +694,11 @@ const Page: React.FC<{ promise: Promise<PostProps> }> = ({ promise }) => {
                     </Tab.Panels>
                   </Tab.Group>
 
-                  <Link
-                    href="#"
+                  <button
+                    onClick={process}
                     className="link inline-flex items-center gap-2 py-3 px-6 rounded-full bg-primary text-white :bg-primary-400 hover:text-white font-medium w-full justify-center mb-6">
                     <span className="inline-block"> Proceed Booking </span>
-                  </Link>
+                  </button>
                   <ul className="flex justify-center gap-6">
                     <li>
                       <div className="flex items-center gap-2">
@@ -666,16 +707,6 @@ const Page: React.FC<{ promise: Promise<PostProps> }> = ({ promise }) => {
                         </button>
                         <span className="inline-block text-sm clr-neutral-500">
                           Save To Wish List
-                        </span>
-                      </div>
-                    </li>
-                    <li>
-                      <div className="flex items-center gap-2">
-                        <button className="w-7 h-7 rounded-full bg-[var(--primary-light)] text-primary grid place-content-center">
-                          <ArrowsRightLeftIcon className="w-5 h-5" />
-                        </button>
-                        <span className="inline-block text-sm clr-neutral-500">
-                          Compare
                         </span>
                       </div>
                     </li>

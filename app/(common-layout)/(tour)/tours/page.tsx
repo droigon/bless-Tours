@@ -168,7 +168,7 @@ export default function Page( {
           entries.map((packageInfo) => <PackageCard key={packageInfo._id} packageInfo={packageInfo} />)
         )}
       
-      
+       
       
       <PaginationControls
         hasNextPage={end < packages.length}

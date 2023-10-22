@@ -69,7 +69,8 @@ export default function Page() {
   const Register = async () => {
     
     //console.log(picture,insurance,identity)
-    const res = await fetch(`https://blesstours.onrender.com/api/v1/users/verify/${session?.user?.data?.id}`, {
+    //console.log(session?.user?.id)
+    const res = await fetch(`https://blesstours.onrender.com/api/v1/users/verify/${session?.user?.id}`, {
       method: "POST",
       body: JSON.stringify({  
         
@@ -85,11 +86,15 @@ export default function Page() {
     });
     console.log("onboarding")
     const response = await res.json();
-    //alert("User Registered!");
+    console.log(response)
+    alert(response.message);
     
     //console.log({ response });
+    setTimeout(() => {
+      Router.push("/user/personal-info");
+    }, 1000); // Adjust the delay time as needed
 
-    Router.push("/user/personal-info")
+    //Router.push("/user/personal-info")
 
   };
 
@@ -102,7 +107,7 @@ export default function Page() {
   return (
     <div className="py-[30px] lg:py-[60px] bg-[var(--bg-2)] px-3">
       <div className="container">
-        <div className="w-full xl:w-[83.33%] xxl:w-[66.66%] mx-auto">
+        <div className="w-full xl:w-[93.33%] xxl:w-[86.66%] mx-auto">
           {/* Item 1 */}
           <div className="bg-white p-4 sm:p-6 md:p-10 mb-5 sm:mb-8 md:mb-12 rounded-2xl">
             <Accordion
@@ -235,9 +240,9 @@ export default function Page() {
                   </label>
                 </div>
 
-                <Link href="#" onClick={Register} className="btn-primary font-semibold">
+                <button onClick={Register} className="btn-primary font-semibold">
                   <span className="inline-block"> Save </span>
-                </Link>
+                </button>
                 
                
               </div>

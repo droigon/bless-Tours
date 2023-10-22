@@ -8,7 +8,7 @@ export default withAuth(
     //console.log("tok ", req.nextauth.token?.ROLE);
 
 
-    if (req.nextUrl.pathname.startsWith("/admin") && req.nextauth.token?.role !== "admin")
+    if (req.nextUrl.pathname.startsWith("/admins") && req.nextauth.token?.role !== "ADMIN")
       return NextResponse.rewrite(
         new URL("/auth/login?message=You Are Not Authorized!", req.url)
       );
@@ -17,6 +17,10 @@ export default withAuth(
         new URL("/auth/login?message=You Are Not Authorized!", req.url)
       );
     if (req.nextUrl.pathname.startsWith("/user") && req.nextauth.token?.ROLE !== "USER")
+      return NextResponse.rewrite(
+        new URL("/auth/login?message=You Are Not Authorized!", req.url)
+      );
+    if (req.nextUrl.pathname.startsWith("/booking") && req.nextauth.token?.ROLE !== "USER")
       return NextResponse.rewrite(
         new URL("/auth/login?message=You Are Not Authorized!", req.url)
       );
@@ -30,7 +34,7 @@ export default withAuth(
 );
 
 export const config = {
-  matcher: ["/admin/:path*", "/user/:path*", "/vendor/:path*"],
+  matcher: ["/admin/:path*", "/user/:path*", "/vendor/:path*", "/booking/:path*"],
 };
 
 
