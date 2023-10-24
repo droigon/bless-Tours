@@ -25,18 +25,19 @@ interface Field {
 
 
 type FormInputs = {
-  name: string;
-  location: string;
-  description: string;
-  category: string;
-  amount: number;
-  guests: number;
-  duration: string;
-  cancellation: string;
-  refund: string;
-  inclusion: string[];
-  exclusion: string[];
-  itinerary: Itenary[];
+  ID: number;
+  NAME: string;
+  LOCATION: string;
+  DESCRIPTION: string;
+  CATEGORY: string;
+  AMOUNT: number;
+  GUESTS: number;
+  DURATION: string;
+  CANCELLATION_POLICY: string;
+  REFUND_POLICY: string;
+  INCLUSION: string[];
+  EXCLUSION: string[];
+  ITENARY: Itenary[];
 }; 
 
 
@@ -84,48 +85,35 @@ async function fetchUserData(userId: string): Promise<UserData | null> {
 
 export default function Page({ params }: { params: { id: string } }) {
   
-  
-
-  
   const [images, setImages] = useState<string[]>([]);
 
-
-  
-  //const [itenary, setItenary] = useState([{ name: '', location: '', title: '', description: '' }]);
   const [itenary, setItenary] = useState<Itenary[]>([
     { name: '', location: '', title: '', description: '' }
   ]);
   
 
   const { data: session } = useSession();
-  const [token, setToken] = useState("");
-
-
-  
+  const [token, setToken] = useState("");  
   const [inclusionArray, setInclusionArray] = useState<string[]>(['']);
   const [exclusionArray, setExclusionArray] = useState<string[]>(['']);
 //  const [itinerary, setItinerary] = useState<Itenary[]>([{ name: '', location: '', title: '', description: '' }]);
   const [userData, setUserData] = useState<UserData | null>(null);
+  const Router = useRouter()
   const [tourDatas, setTourData] = useState<FormInputs>({
-    name: '',
-    location: '',
-    description: '',
-    category: '',
-    amount: 0,
-    guests: 0,
-    duration: '',
-    cancellation: '',
-    refund: '',
-    inclusion: [],
-    exclusion: [],
-    itinerary: [],
+    ID:0,
+    NAME: '',
+    LOCATION: '',
+    DESCRIPTION: '',
+    CATEGORY: '',
+    AMOUNT: 0,
+    GUESTS: 0,
+    DURATION: '',
+    CANCELLATION_POLICY: '',
+    REFUND_POLICY: '',
+    INCLUSION: [],
+    EXCLUSION: [],
+    ITENARY: [],
   });
-
-
-  
-
-  
-  
 
 
 
@@ -184,74 +172,42 @@ export default function Page({ params }: { params: { id: string } }) {
   };
 
 
-  //console.log('sess',session?.vendor)
-  
-
-
-
   const data = useRef<FormInputs>({
-    name: "",
-    location: "",
-    description: "",
-    category: "",
-    amount: 0,
-    guests: 0,
-    duration: "",
-    refund: "",
-    cancellation: "",
-    inclusion:[],
-    exclusion: [],
-    itinerary: [],
+    ID:0,
+    NAME: '',
+    LOCATION: '',
+    DESCRIPTION: '',
+    CATEGORY: '',
+    AMOUNT: 0,
+    GUESTS: 0,
+    DURATION: '',
+    CANCELLATION_POLICY: '',
+    REFUND_POLICY: '',
+    INCLUSION: [],
+    EXCLUSION: [],
+    ITENARY: [],
   });
 
 
   useEffect(() => {
 
-    const fetchTourData = async (tourId: string) => {
+    const fetchTourData = async () => {
       try {
         console.log("parmas",params.id);
         const response = await fetch(`https://blesstours.onrender.com/api/v1/tours/${params.id}`);
-        //console.log(response.json())
-        //const response = await fetch(`https://blesstours.onrender.com/api/v1/tours/652b81a8ef047a18e6453b5c`);
         console.log("fetching----");
         if (!response.ok) {
           const errorData: ErrorResponse = await response.json();
           throw new Error(errorData.message);
         }
-
-        //const data: ApiResponse = await response.json();
-
-        //const data  = await response.json();
-        //console.log("tours:", await response.json())
-        // Transform userData to match FormInputs structure
-        //console.log("tours:",tourData);
-        const data: ApiResponse = await response.json();
-        setTourData(data.data); 
+        const datas: ApiResponse = await response.json();
+        setTourData(datas.data); 
+        //console.log('bbbb',datas.data)
         
-        
-        const DA = data.data
-        console.log("tours:",DA);
-        //const userData: UserData = await response.json();
-        //console.log("tours:", await response.json())
-        // Transform userData to match FormInputs structure
-        const tourData: FormInputs = {
-          name: "data.data.NAME",
-          location: "ninin",
-          description: data.data.description,
-          category: "", // Set appropriate category value based on your logic
-          amount: 0,
-          guests: 0,
-          duration: '',
-          cancellation: '',
-          refund: '',
-          inclusion: [],
-          exclusion: [],
-          itinerary: [],
-        }
-        
-        
-
-        setTourData(tourData); // Set the fetched tour data
+        data.current=datas.data // Set the fetched tour data
+        setInclusionArray(data.current.INCLUSION)
+        setExclusionArray(data.current.EXCLUSION)
+        setItenary(data.current.ITENARY)
         
       } catch (error) {
         console.error('Error fetching tour data:', error);
@@ -271,7 +227,7 @@ export default function Page({ params }: { params: { id: string } }) {
             setUserData(userData);
             setToken(tokenz)
             if (params.id) {
-              fetchTourData(params.id);
+              fetchTourData();
             }
           }
         })
@@ -295,20 +251,20 @@ export default function Page({ params }: { params: { id: string } }) {
         method: 'PUT',  // Use the appropriate HTTP method for updating data
         headers: {
           'Content-Type': 'application/json',
-          "x-vendor-token": `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiVkVORE9SIiwibmFtZSI6IkpvbiBkb2UiLCJwYXNzd29yZCI6IiQyYiQxMCRKS0FQb0lKdzdaZVEwTHJPcm1VVG1PUnZmOVdlR2FxamtjcHdaNnY4Si5LcVl1NkVkcU8xRyIsImlhdCI6MTY5NzM4NjUwNiwiZXhwIjoxNjk3MzkwMTA2fQ.RFTvQ3hJQDXTcfm-lPahQUutYC3LE7lK2UiLXkJlaoA`,
+          "x-vendor-token": `${token}`,
         },
         body: JSON.stringify({
-          "NAME":data.current.name, 
-          "LOCATION": data.current.location,
-          "DESCRIPTION":  data.current.location,
+          "NAME":data.current.NAME, 
+          "LOCATION": data.current.LOCATION,
+          "DESCRIPTION":  data.current.DESCRIPTION,
           "IMAGE":images,
-          "CATEGORY": data.current.category,
-          "CANCELLATION_POLICY":data.current.cancellation,
-          "REFUND_POLICY":data.current.refund,
-          "PRICE":data.current.amount,
-          "AMOUNT":data.current.amount,
-          "GUESTS":data.current.guests,
-          "DURATION": data.current.duration,
+          "CATEGORY": data.current.CATEGORY,
+          "CANCELLATION_POLICY":data.current.CANCELLATION_POLICY,
+          "REFUND_POLICY":data.current.REFUND_POLICY,
+          "PRICE":data.current.AMOUNT,
+          "AMOUNT":data.current.AMOUNT,
+          "GUESTS":data.current.GUESTS,
+          "DURATION": data.current.DURATION,
           "EXCLUSION": exclusionArray,
           "INCLUSION": inclusionArray,
           "ITENARY": itenary,
@@ -318,13 +274,17 @@ export default function Page({ params }: { params: { id: string } }) {
       if (response.ok) {
         alert("Tour updated successfully!");
         console.log(response.json(),'Tour updated successfully!');
+        Router.push("/vendor/listings");
       } else {
+        alert("Failed to update tour.!");
         console.error(await response.json(), 'Failed to update tour.');
       }
     } catch (error) {
       console.error('Error updating tour:', error);
     }
   };
+
+  
 
 
   return (
@@ -359,9 +319,10 @@ export default function Page({ params }: { params: { id: string } }) {
                       <p className="mt-6 mb-4 text-xl font-medium"> Name: </p>
                       <input
                         type="text"
-                        onChange={(e) => (data.current.name = e.target.value)}
+                        defaultValue={data.current.NAME}
+                        onChange={(e) => (data.current.NAME = e.target.value)}
                         className="w-full border p-2 focus:outline-none rounded-md text-base"
-                        placeholder="Enter Name"
+                        placeholder="Enter name"
                       />
                     </div>
                   </div>
@@ -370,9 +331,10 @@ export default function Page({ params }: { params: { id: string } }) {
                       <p className="mt-6 mb-4 text-xl font-medium"> Location: </p>
                       <input
                         type="text"
-                        onChange={(e) => (data.current.location = e.target.value)}
+                        defaultValue={data.current.LOCATION}
+                        onChange={(e) => (data.current.LOCATION = e.target.value)}
                         className="w-full border p-2 focus:outline-none rounded-md text-base"
-                        placeholder="Enter Location"
+                        placeholder="Enter location"
                       />
                     </div>
                   </div>
@@ -383,13 +345,14 @@ export default function Page({ params }: { params: { id: string } }) {
                     <p className="mt-6 mb-4 text-xl font-medium">Description :</p>
                     <textarea
                       rows={5}
-                      onChange={(e) => (data.current.description = e.target.value)}
+                      defaultValue={data.current.DESCRIPTION}
+                      onChange={(e) => (data.current.DESCRIPTION = e.target.value)}
                       className="w-full border p-2 focus:outline-none rounded-md "
                       placeholder="Description.."></textarea>
 
                     <p className="mt-6 mb-4 text-xl font-medium"> Category </p>
-                    <select className="w-full bg-transparent px-5 py-3 focus:outline-none border rounded-md text-base pr-3" onChange={(e) => (data.current.category = e.target.value)}>
-                      <option>Choice</option>
+                    <select className="w-full bg-transparent px-5 py-3 focus:outline-none border rounded-md text-base pr-3" defaultValue={data.current.CATEGORY} onChange={(e) => (data.current.CATEGORY = e.target.value)}>
+                      <option>------</option>
                       <option value="vacation">Vacation</option>
                       <option value="tour">Tour</option>
                       
@@ -401,9 +364,10 @@ export default function Page({ params }: { params: { id: string } }) {
                       <p className="mt-6 mb-4 text-xl font-medium"> Amount: </p>
                       <input
                           type="number"
-                          onChange={(e) => (data.current.amount = parseInt(e.target.value))}
+                          defaultValue={data.current.AMOUNT}
+                          onChange={(e) => (data.current.AMOUNT = parseInt(e.target.value))}
                           className="w-full border p-2 focus:outline-none rounded-md text-base"
-                          placeholder="Enter area"
+                          placeholder="Enter amount"
                         />
                     </div>
                   </div>
@@ -412,7 +376,8 @@ export default function Page({ params }: { params: { id: string } }) {
                       <p className="mt-6 mb-4 text-xl font-medium"> No Of Guests : </p>
                       <input
                           type="number"
-                          onChange={(e) => (data.current.guests = parseInt(e.target.value))}
+                          defaultValue={data.current.GUESTS}
+                          onChange={(e) => (data.current.GUESTS = parseInt(e.target.value))}
                           className="w-full border p-2 focus:outline-none rounded-md text-base"
                           placeholder="Enter guests"
                         />
@@ -422,7 +387,8 @@ export default function Page({ params }: { params: { id: string } }) {
                   <p className="mt-6 mb-4 text-xl font-medium">Duration (Days) :</p>
                   <input
                     type="text"
-                    onChange={(e) => (data.current.duration = e.target.value)}
+                    defaultValue={data.current.DURATION}
+                    onChange={(e) => (data.current.DURATION = e.target.value)}
                     className="w-full border p-2 focus:outline-none rounded-md text-base"
                     placeholder="Enter duration"
                   />
@@ -441,6 +407,7 @@ export default function Page({ params }: { params: { id: string } }) {
                       <input
                         type="text"
                         placeholder={`Add inclusion `}
+
                         value={inclusion}
                         className="w-full border p-2 mt-4 focus:outline-none rounded-md text-base"
                         onChange={(event) => handleInclusionChange(index, event)}
@@ -485,14 +452,16 @@ export default function Page({ params }: { params: { id: string } }) {
                   <p className="mt-6 mb-4 text-xl font-medium">Cancellation Policy :</p>
                     <textarea
                       rows={5}
-                      onChange={(e) => (data.current.cancellation = e.target.value)}
+                      defaultValue={data.current.CANCELLATION_POLICY}
+                      onChange={(e) => (data.current.CANCELLATION_POLICY = e.target.value)}
                       className="w-full border p-2 focus:outline-none rounded-md "
                       placeholder="Description.."></textarea>
 
                   <p className="mt-6 mb-4 text-xl font-medium">Refund Policy :</p>
                     <textarea
                       rows={5}
-                      onChange={(e) => (data.current.refund = e.target.value)}
+                      defaultValue={data.current.REFUND_POLICY}
+                      onChange={(e) => (data.current.REFUND_POLICY = e.target.value)}
                       className="w-full border p-2 focus:outline-none rounded-md "
                       placeholder="Description.."></textarea>
 

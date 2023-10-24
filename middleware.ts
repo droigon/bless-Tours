@@ -8,7 +8,7 @@ export default withAuth(
     //console.log("tok ", req.nextauth.token?.ROLE);
 
 
-    if (req.nextUrl.pathname.startsWith("/admins") && req.nextauth.token?.role !== "ADMIN")
+    if (req.nextUrl.pathname.startsWith("/admin") && req.nextauth.token?.role !== "ADMIN")
       return NextResponse.rewrite(
         new URL("/auth/login?message=You Are Not Authorized!", req.url)
       );

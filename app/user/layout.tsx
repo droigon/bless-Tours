@@ -216,6 +216,16 @@ export default function RootLayout({
                   <ul className="flex flex-col gap-3">
                     <li>
                       <Link
+                        href="/"
+                        className={`link flex items-center gap-2 clr-neutral-500 hover:text-primary ${
+                          path === "/" && "text-primary"
+                        }`}>
+                        <i className="las la-home text-xl"></i>
+                        <span className="block font-medium">Home</span>
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
                         href="/user/personal-info"
                         className={`link flex items-center gap-2 clr-neutral-500 hover:text-primary ${
                           path === "/personal-info" && "text-primary"
@@ -271,9 +281,9 @@ export default function RootLayout({
                   <ul className="flex flex-col gap-3">
                     <li>
                       <Link
-                        href="/user-booking"
+                        href="/user/user-booking"
                         className={`link flex items-center gap-2 clr-neutral-500 hover:text-primary ${
-                          path === "/user-booking" && "text-primary"
+                          path === "/user/user-booking" && "text-primary"
                         }`}>
                         <ClipboardDocumentCheckIcon className="w-5 h-5" />
                         <span className="block font-medium"> My Bookings </span>
@@ -281,9 +291,9 @@ export default function RootLayout({
                     </li>
                     <li>
                       <Link
-                        href="/user-wishlist"
+                        href="/user/user-wishlist"
                         className={`link flex items-center justify-between gap-2 clr-neutral-500 hover:text-primary ${
-                          path === "/user-wishlist" && "text-primary"
+                          path === "/user/user-wishlist" && "text-primary"
                         }`}>
                         <span className="flex items-center gap-2">
                           <HeartIcon className="w-5 h-5" />
@@ -303,9 +313,9 @@ export default function RootLayout({
                   <ul className="flex flex-col gap-3">
                     <li>
                       <Link
-                        href="/user-payment"
+                        href="/user/user-payment"
                         className={`link flex items-center gap-2 clr-neutral-500 hover:text-primary ${
-                          path === "/user-payment" && "text-primary"
+                          path === "/user/user-payment" && "text-primary"
                         }`}>
                         <CreditCardIcon className="w-5 h-5" />
                         <span className="block font-medium"> Payments </span>
@@ -313,22 +323,12 @@ export default function RootLayout({
                     </li>
                     <li>
                       <Link
-                        href="/user-address"
+                        href="/user/user-address"
                         className={`link flex items-center gap-2 clr-neutral-500 hover:text-primary ${
-                          path === "/user-address" && "text-primary"
+                          path === "/user/user-address" && "text-primary"
                         }`}>
                         <MapPinIcon className="w-5 h-5" />
                         <span className="block font-medium"> Address </span>
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        href="/user-team"
-                        className={`link flex items-center gap-2 clr-neutral-500 hover:text-primary ${
-                          path === "/user-team" && "text-primary"
-                        }`}>
-                        <UserGroupIcon className="w-5 h-5" />
-                        <span className="block font-medium"> Teams </span>
                       </Link>
                     </li>
                   </ul>

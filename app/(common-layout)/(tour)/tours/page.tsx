@@ -174,6 +174,7 @@ export default function Page( {
         hasNextPage={end < packages.length}
         hasPrevPage={start > 0}
         dataLength={packages.length}
+        url="/tours/"
       />
     </>
   );

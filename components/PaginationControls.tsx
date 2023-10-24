@@ -11,6 +11,7 @@ interface PaginationControlsProps {
   hasNextPage: boolean
   hasPrevPage: boolean
   dataLength: number
+  url: string
 }
 
 const PaginationControls: FC<PaginationControlsProps> = (
@@ -18,6 +19,7 @@ const PaginationControls: FC<PaginationControlsProps> = (
     hasNextPage,
     hasPrevPage,
     dataLength,
+    url,
   }
 ) => {
   const router = useRouter()
@@ -35,7 +37,7 @@ const PaginationControls: FC<PaginationControlsProps> = (
                     className="link flex items-center clr-neutral-500 hover:text-primary gap-1 order-1"
                     disabled={!hasPrevPage}
                     onClick={() => {
-                        router.push(`/tours/?page=${Number(page) - 1}&limit=${per_page}`)
+                        router.push(`${url}?page=${Number(page) - 1}&limit=${per_page}`)
                     }}>
                     <ArrowLongLeftIcon className="w-5 h-5" />
                     <span className="inline-block font-semibold">
@@ -50,7 +52,7 @@ const PaginationControls: FC<PaginationControlsProps> = (
                     className="link flex items-center clr-neutral-500 hover:text-primary gap-1 order-2"
                     disabled={!hasNextPage}
                     onClick={() => {
-                        router.push(`/tours/?page=${Number(page) + 1}&limit=${per_page}`)
+                        router.push(`${url}?page=${Number(page) + 1}&limit=${per_page}`)
                     }}>
                     <span className="inline-block font-semibold">
                       Next Tour

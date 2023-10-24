@@ -48,6 +48,22 @@
     .white-text-nav{
         @apply text-gray-600 lg:text-white;
     }
+
+    .password-input {
+        position: relative;
+      }
+      
+    .password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    }
+      
+    
 }
 
 @layer utilities {

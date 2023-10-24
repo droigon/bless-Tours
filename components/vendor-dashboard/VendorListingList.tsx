@@ -85,7 +85,7 @@ const VendorListingList = ({ item }: any) => {
           <div className="property-card__body">
             <div className="flex justify-between mb-2">
               <Link
-                href="/hotel-listing-details"
+                href={`/vendor/listings/${_id}`}
                 className="link block flex-grow text-[var(--neutral-700)] hover:text-primary text-xl font-medium">
                 {NAME}
               </Link>

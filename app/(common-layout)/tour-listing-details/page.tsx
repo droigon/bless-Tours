@@ -61,7 +61,7 @@ const Page: React.FC<{ promise: Promise<PostProps> }> = ({ promise }) => {
   const [startDate, endDate] = dateRange;
   const [post, setPost] = useState<PostProps | null>(null);
   
-  const { setGuests, setLocation, setTourID } = useAppContext();
+  const { setGuests, setLocation, setTourID,setCheckout,setCheckin } = useAppContext();
   
   const router = useRouter();
 
@@ -70,6 +70,8 @@ const Page: React.FC<{ promise: Promise<PostProps> }> = ({ promise }) => {
     setGuests(data.current.guests)
     setLocation(data.current.location)
     setTourID(post?._id || "")
+    setCheckout(endDate?.toDateString() || "")
+    setCheckin(startDate?.toDateString() || "")
 
     if (!data.current.location || data.current.location==="") {
       // Throw an error if location is empty

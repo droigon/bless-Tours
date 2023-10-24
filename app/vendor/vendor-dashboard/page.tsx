@@ -8,6 +8,10 @@ import Pagination from "@/components/vendor-dashboard/Pagination";
 import CounterElement from "@/components/CounterElement";
 import dynamic from "next/dynamic";
 import { ApexOptions } from "apexcharts";
+import React, { useState, useEffect } from 'react';
+import { useSession } from "next-auth/react"
+
+
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 var options: ApexOptions = {
   chart: {
@@ -47,7 +51,91 @@ var series = [
   },
 ];
 
-const Page = () => {
+
+
+interface ApiResponse {
+  data: BookingData[];
+}
+
+interface ErrorResponse {
+  message: string;
+}
+
+interface BookingData {
+  _id:string;
+  name:string;
+  status:string;
+  location:string;
+  guests:number;
+  amount:number;
+  checkinDate: string;
+  checkoutDate:string;
+}
+
+
+async function fetchBookingData(userId: string): Promise<BookingData[] > {
+  try {
+    const response = await fetch(`https://blesstours.onrender.com/api/v1/booking/vendor/bookings/${userId}?page=1&limit=5`);
+    if (!response.ok) {
+      const errorData: ErrorResponse = await response.json();
+      throw new Error(errorData.message);
+    }
+
+    const responseData: ApiResponse = await response.json();
+    return responseData.data;
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+    return [];
+  }
+}
+
+
+
+export default function Page( {
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | string[] | undefined },
+}) {
+
+  const { data: session } = useSession();
+  const [isLoading, setLoading] = useState<boolean>(true);
+  const [packages, setPackages] = useState<BookingData[]>([]);
+
+
+  const page = searchParams['page'] ?? '1'
+  const per_page = searchParams['limit'] ?? '6'
+
+  // mocked, skipped and limited in the real app
+  const start = (Number(page) - 1) * Number(per_page) // 0, 5, 10 ...
+  const end = start + Number(per_page) // 5, 10, 15 ...
+
+  const entries = packages.slice(start, end)
+
+
+  useEffect(() => {
+    if (session ) {
+      const userId = session.user?.id || "";
+      //const tokenz = session.user?.token || "";
+
+      //console.log('data', userId)
+      const fetchPackages = async (): Promise<void> => {
+        try {
+          setLoading(true);
+          const data = await fetchBookingData(userId);
+          setPackages(data);
+          setLoading(false);
+        } catch (error) {
+          console.error('Error fetching packages:', error);
+          setLoading(false);
+        }
+      };
+  
+      fetchPackages();
+    }
+    
+  }, [session]);
+
+
   return (
     <div>
       {/* statisticts */}
@@ -100,7 +188,7 @@ const Page = () => {
           <div className="flex justify-between mb-7">
             <h3 className="h3">Recent Bookings</h3>
             <Link
-              href="/"
+              href="/vendor/bookings/?page=1&limit=6"
               className="text-primary font-semibold flex items-center gap-2">
               View All <ArrowRightIcon className="w-5 h-5" />
             </Link>
@@ -110,34 +198,34 @@ const Page = () => {
               <thead>
                 <tr className="text-left bg-[#F5F5FE] border-b border-dashed">
                   <th className="py-3 px-2">#</th>
-                  <th className="py-3 px-2">item</th>
+                  <th className="py-3 px-2">Name</th>
                   <th className="py-3 px-2">Amount</th>
-                  <th className="py-3 px-2">Paid</th>
-                  <th className="py-3 px-2">Date</th>
-                  <th className="py-3 px-2">Time</th>
+                  <th className="py-3 px-2">Guests</th>
+                  <th className="py-3 px-2">check in date</th>
+                  <th className="py-3 px-2">check out date</th>
                   <th className="py-3 px-2">Status</th>
                 </tr>
               </thead>
               <tbody>
-                {recentBookings.map(
-                  ({ id, amount, date, item, paid, status, time }) => (
-                    <tr key={id} className="border-b border-dashed">
-                      <td className="py-3 px-2">{id}</td>
-                      <td className="py-3 px-2 text-primary">{item}</td>
+                {entries.map(
+                  ({ _id, name, status, location, guests, amount, checkinDate, checkoutDate, }) => (
+                    <tr key={_id} className="border-b border-dashed">
+                      <td className="py-3 px-2">{_id}</td>
+                      <td className="py-3 px-2 text-primary">{name}</td>
                       <td className="py-3 px-2">{amount}</td>
-                      <td className="py-3 px-2">{paid}</td>
-                      <td className="py-3 px-2">{date}</td>
-                      <td className="py-3 px-2">{time}</td>
+                      <td className="py-3 px-2">{guests}</td>
+                      <td className="py-3 px-2">{checkinDate}</td>
+                      <td className="py-3 px-2">{checkoutDate}</td>
                       <td className={`py-3 px-2`}>
                         <span
                           className={`py-2 px-3 rounded-xl ${
-                            status == "Rejected" &&
+                            status == "rejected" &&
                             "text-[var(--secondary-500)] bg-[#EBFBF2]"
                           } ${
-                            status == "Successfull" &&
+                            status == "completed" &&
                             "text-primary bg-[#EBEBFD]"
                           } ${
-                            status == "Pending" && "text-[#9C742B] bg-[#FFF9ED]"
+                            status == "upcoming" && "text-[#9C742B] bg-[#FFF9ED]"
                           }`}>
                           {status}
                         </span>
@@ -147,7 +235,7 @@ const Page = () => {
                 )}
               </tbody>
             </table>
-            <Pagination />
+            
           </div>
         </div>
       </section>
@@ -157,4 +245,3 @@ const Page = () => {
   );
 };
 
-export default Page;

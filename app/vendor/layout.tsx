@@ -12,6 +12,7 @@ import {
   ClipboardDocumentListIcon,
   Cog6ToothIcon,
   CurrencyDollarIcon,
+  HomeIcon,
   PlusCircleIcon,
   StarIcon,
   TicketIcon,
@@ -126,6 +127,16 @@ export default function RootLayout({
             </ul>
             <span className="text-xs">Agent Pages</span>
             <ul className="py-5">
+              <li>
+                <Link
+                  href="/"
+                  className={`flex items-center gap-2 rounded-md px-6 py-3 duration-300 ${
+                    path == "/" && "bg-primary text-white"
+                  }`}>
+                  <HomeIcon className="w-5 h-5" />
+                  Home
+                </Link>
+              </li>
               <li>
                 <Link
                   href="/vendor/listings"

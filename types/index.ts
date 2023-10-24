@@ -75,4 +75,21 @@ export interface SearchLocationProps {
 export interface SearchBarFacturerProps {
   value: number;
   setValue: (value: number) => void;
+} 
+
+
+
+export async function fetchTours(ids: string) {
+  
+
+
+  // Set the required headers for the API request
+  const response = await fetch(
+    `https://blesstours.onrender.com/api/v1/tours/${ids}`,
+  );
+
+  // Parse the response as JSON
+  const result = await response.json();
+
+  return result;
 }

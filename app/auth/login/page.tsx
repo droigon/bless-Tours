@@ -4,7 +4,7 @@ import Link from "next/link";
 import LoginImg from "@/public/img/login-img.png";
 
 import { signIn } from "next-auth/react";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { createUrl } from "@/src/utils/createUrl";
 import Button from "@/components/Button";
@@ -16,10 +16,22 @@ interface IProps {
 
 //const page = () => {
 const LoginPage = ({ searchParams }: IProps) => {
+  const [values, setValues] = useState({
+    password: "",
+    showPassword: false,
+});
   const router = useRouter();
   const pathname = usePathname();
   const urlsearchParams = useSearchParams();
   const optionSearchParams = new URLSearchParams(urlsearchParams?.toString());
+
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [password, setPassword] = useState('');
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
   const email = useRef("");
   const pass = useRef("");
@@ -83,7 +95,8 @@ const LoginPage = ({ searchParams }: IProps) => {
                       Enter Your Password
                     </label>
                     <input
-                      type="text"
+                      //type="password"
+                      type={values.showPassword ? "text" : "password"}
                       onChange={(e) => (pass.current = e.target.value)}
                       className="w-full bg-[var(--bg-1)] border focus:outline-none rounded-full py-3 px-5 mb-3"
                       placeholder="Enter Your Password"

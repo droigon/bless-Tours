@@ -50,35 +50,42 @@ async function fetchUserData(userId: string): Promise<PostProps | null> {
 
 
 const page = () => {
-  const { guests, location, tourID } = useAppContext();
+  const { guests, location, tourID, checkin, checkout } = useAppContext();
   const [post, setPost] = useState<PostProps | null>(null);
   const { data: session } = useSession();
   const totalAmount = (post?.AMOUNT || 0) * guests;
   const router = useRouter();
   const [token, setToken] = useState("");
 
-  const register = async () => {
-    const res = await fetch("https://blesstours.onrender.com/api/v1/users/signup", {
-      method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          "x-vendor-token": `${token}`, // Include the JWT token
-        },
-        body: JSON.stringify({
-          location:location,
-          guests:guests,
-          amount:totalAmount,
-          checkinDate: "",
-          checkoutDate:""
-        
-      }),
-    });
+  const makePayment = async () => {
+    const userId = session?.user?.id;
+
+    if (userId) {
+      const res = await fetch("https://blesstours.onrender.com/api/v1/booking/add", {
+        method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            "x-user-token": `${token}`, // Include the JWT token
+          },
+          body: JSON.stringify({
+            userId: userId,
+            tourId: tourID,
+            location:location,
+            guests:guests,
+            amount:totalAmount,
+            checkinDate: checkin,
+            checkoutDate: checkout
+          
+        }),
+      });
+      const response = await res.json();
+      alert("Booking Successful");
+      
+      console.log({ response });
+      router.push('/user/user-booking');
+    }
     
-    const response = await res.json();
-    alert("Registration Successful");
     
-    console.log({ response });
-    router.push('/auth/login');
   };
 
   useEffect(() => {
@@ -199,13 +206,13 @@ const page = () => {
                           <span className="material-symbols-outlined mat-icon clr-neutral-600 inline-block mb-1">
                            Start point
                           </span>
-                          <span className="block text-sm"> </span>
+                          <span className="block text-sm"> {checkin}</span>
                         </li>
                         <li>
                           <span className="material-symbols-outlined mat-icon clr-neutral-600 inline-block mb-1">
                           End Point
                           </span>
-                          <span className="block text-sm">  </span>
+                          <span className="block text-sm">{checkout}  </span>
                         </li>
                         
                       </ul>
@@ -431,11 +438,11 @@ const page = () => {
                 <p className="mb-0">Payable Now</p>
                 <p className="mb-0 font-medium">1115</p>
               </div>
-              <Link
-                href="#"
+              <button
+                onClick={makePayment}
                 className="link inline-flex items-center gap-2 py-3 px-6 rounded-full bg-primary text-white :bg-primary-400 hover:text-white font-medium w-full justify-center">
                 <span className="inline-block"> Payment </span>
-              </Link>
+              </button>
             </div>
           </div>
         </div>
