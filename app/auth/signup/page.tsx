@@ -60,7 +60,7 @@ const page = () => {
                       Enter Your Password
                     </label>
                     <input
-                      type="text"
+                      type="password"
                       className="w-full bg-[var(--bg-1)] border focus:outline-none rounded-full py-3 px-5"
                       placeholder="Enter Your Password"
                       id="enter-password"
