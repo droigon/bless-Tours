@@ -13,6 +13,10 @@ import HeroDropdown4 from "../home-1/HeroDropdown4";
 import GuestDropdown from "./GuestDropdown";
 import { Combobox, Transition } from "@headlessui/react";
 import "node_modules/react-modal-video/scss/modal-video.scss";
+import "swiper/css";
+import "swiper/css/navigation";
+import { Navigation } from "swiper";
+import { Swiper, SwiperSlide } from "swiper/react";
 
 import { useRouter } from "next/navigation";
 
@@ -55,10 +59,6 @@ const Hero = () => {
   const updateSearchParams = (locations: string, value: number) => {
     // Create a new URLSearchParams object using the current URL search parameters
     const searchParams = new URLSearchParams(window.location.search);
-
-    
-
-    console.log("Loca",locations)
 
     // Update or delete the 'model' search parameter based on the 'model' value
     if (locations) {
@@ -111,38 +111,15 @@ const Hero = () => {
             </p>
           </div>
         </div>
-        <div className="flex flex-wrap gap-5 mt-6 bg-white p-5 rounded-xl shadow-lg">
-        <div className="w-full md:w-[48%] xl:w-[22%] flex pr-3 items-center justify-between rounded-full sm:text-sm bg-[var(--bg-1)] border">
-            <input
-              placeholder="Location"
-              onChange={(event) => setQuery(event.target.value)}
-              className="w-full bg-[var(--bg-1)] p-3 rounded-full focus:outline-none"
-            />
-          </div>
-
+       
+      
       
 
-          <div className="w-full md:w-[48%] xl:w-[22%] flex pr-3 items-center justify-between rounded-full sm:text-sm bg-[var(--bg-1)] border">
-            <DatePicker
-              placeholderText="Check In - Check Out"
-              selectsRange={true}
-              startDate={startDate}
-              dateFormat="dd-MM-yyyy"
-              endDate={endDate}
-              onChange={(update) => setDateRange(update)}
-              className="w-full bg-[var(--bg-1)] p-3 rounded-full focus:outline-none"
-            />
-            <CalendarDaysIcon className="w-6 h-6 text-gray-600 shrink-0" />
-          </div>
-          <GuestDropdown />
-          <HeroDropdown4 value={value} setValue={setValue} />
+            
           
           
-          <button type='submit' onClick={handleSearch} className="py-[14px] px-6 w-full flex justify-center xl:w-auto text-white bg-primary rounded-full" >          
-            <SearchIcon />
-          </button>
   
-        </div>
+         
       </div>
       <ModalVideo
         channel="vimeo"
@@ -150,6 +127,87 @@ const Hero = () => {
         videoId="779229876"
         onClose={() => setOpen(false)}
       />
+
+        <div className="row ">
+          <div className="col-span-12">
+            <Swiper
+              loop={true}
+              slidesPerView="auto"
+              spaceBetween={8}
+              navigation={{
+                nextEl: ".btn-next",
+                prevEl: ".btn-prev",
+              }}
+              breakpoints={{
+                768: {
+                  slidesPerView: 2,
+                },
+                992: {
+                  slidesPerView: 3,
+                },
+              }}
+              modules={[Navigation]}
+              className="swiper choice-slider z-1 mb-16">
+              <SwiperSlide className="px-5 my-8">
+                <div className="border rounded-2xl hover:shadow-[rgba(149,157,165,0.2)_0px_8px_24px] hover:border-none p-6 xl:p-8 text-center duration-300">
+                <Link
+                    href="/search?category=land&limit=5">
+                  <Image
+                    width={60}
+                    height={60}
+                    src="/img/duotone-home.png"
+                    alt="image"
+                    className=" mx-auto mb-6"
+                  />
+                  <h4 className="mb-4 text-2xl font-semibold"> Holy Land </h4>
+                  <p className="mb-0">
+                  Holy Land Tours: Embark on a Sacred Pilgrimage to Ancient Sites, where History and Spirituality Unite in a Profound Journey of Discovery.
+                  </p>
+                  </Link>
+                </div>
+              </SwiperSlide>
+              <SwiperSlide className="px-5 my-8">
+                <div className="border rounded-2xl hover:shadow-[rgba(100,100,111,0.2)_0px_7px_29px_0px] hover:border-none p-6 xl:p-8 text-center duration-300">
+                <Link
+                    href="/search?category=city&limit=5">
+                  <Image
+                    width={60}
+                    height={60}
+                    src="/img/duotone-discount.png"
+                    alt="image"
+                    className=" mx-auto mb-6"
+                  />
+                  <h4 className="mb-4 text-2xl font-semibold">
+                   Holy City
+                  </h4>
+                  <p className="mb-0">
+                  Embark on a Spiritual Journey and Explore the Divine Beauty of Sacred Places, Enriching Your Soul Along the Way.
+                  </p>
+                  </Link>
+                </div>
+              </SwiperSlide>
+              <SwiperSlide className="px-5 my-8">
+                <div className="border rounded-2xl hover:shadow-[rgba(100,100,111,0.2)_0px_7px_29px_0px] hover:border-none p-6 xl:p-8 text-center duration-300">
+                <Link
+                    href="/search?category=Vacation&limit=5">
+                  <Image
+                    width={60}
+                    height={60}
+                    src="/img/duotone-support.png"
+                    alt="image"
+                    className=" mx-auto mb-6"
+                  />
+                  <h4 className="mb-4 text-2xl font-semibold">Others</h4>
+                  <p className="mb-0">
+                    Browse other tour category
+                  </p>
+                  </Link>
+                </div>
+              </SwiperSlide>
+            </Swiper>
+          </div>
+          </div>
+
     </div>
   );
 };

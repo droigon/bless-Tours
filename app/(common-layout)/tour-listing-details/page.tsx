@@ -404,13 +404,7 @@ const Page: React.FC<{ promise: Promise<PostProps> }> = ({ promise }) => {
                             <Link
                               href="tour-listing-details"
                               className="link block shrink-0 w-full lg:w-auto">
-                              <Image
-                                width={241}
-                                height={153}
-                                src="/img/itinerary-img-3.jpg"
-                                alt="image"
-                                className=" rounded-2xl w-full object-fit-cover"
-                              />
+                              
                             </Link>
                             <div className="flex-grow">
                               <Link

@@ -13,6 +13,7 @@ import CardPagination from "@/components/CardPagination";
 import React, { useState, useEffect } from 'react';
 import { useRouter } from "next/navigation";
 import { useSearchParams } from 'next/navigation'
+import { toast } from "react-toastify";
 
 interface PackageInfo {
   _id: string;
@@ -27,10 +28,17 @@ interface ApiResponse {
 }
 
 const fetchFeaturedPackages = async (search: string | null, type: string | null): Promise<PackageInfo[]> => {
-  const response = await fetch(`https://blesstours.onrender.com/api/v1/tours/${type}/tours?${type}=${search}&limit=5`);
-  const responseData: ApiResponse = await response.json();
-  console.log(search)
-  return responseData.data || [];
+    const response = await fetch(`https://blesstours.onrender.com/api/v1/tours/search/tours/title?${type}=${search}&limit=5`);
+    const responseData: ApiResponse = await response.json();
+    console.log(search)
+    return responseData.data || [];
+};
+
+const fetchFilteredDate = async (search: string | null, type: string | null): Promise<PackageInfo[]> => {
+    const response = await fetch(`https://blesstours.onrender.com/api/v1/tours/search/tours/date?${search}&limit=5`);
+    const responseData: ApiResponse = await response.json();
+    console.log(search)
+    return responseData.data || [];
 };
 
 
@@ -129,7 +137,29 @@ const PackageCard: React.FC<{ packageInfo: PackageInfo }> = ({ packageInfo }) =>
       const fetchPackages = async (search: string | null): Promise<void> => {
         try {
           console.log("search",search)
-          const data = await fetchFeaturedPackages(search,"category");
+          const data = await fetchFeaturedPackages(search,"q");
+          setPackages(data);
+          setLoading(false);
+          
+        } catch (error) {
+          console.error('Error fetching packages:', error);
+          setLoading(false);
+        }
+      };
+      const fetchDate = async (search: string | null): Promise<void> => {
+        try {
+          console.log("search",search)
+          toast.info('Loading...', {
+            position: "bottom-center",
+            autoClose: 7000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            });
+          const data = await fetchFilteredDate(search,"checkin");
           setPackages(data);
           setLoading(false);
           
@@ -139,13 +169,11 @@ const PackageCard: React.FC<{ packageInfo: PackageInfo }> = ({ packageInfo }) =>
         }
       };
       if (searchParams.get('q')){
-        
         fetchPackages(searchParams.get('q'));
-      }else if (searchParams.get('category')){
-        fetchPackages(searchParams.get('category'))
+      }else if (searchParams.get('checkin')){
+        fetchDate("checkin="+searchParams.get('checkin') +"&checkout=" + searchParams.get('checkout'))
       }
-
-    }, []);
+    }, [searchParams]);
   
   return (
     <>

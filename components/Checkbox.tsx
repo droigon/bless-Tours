@@ -11,6 +11,7 @@ const CheckboxCustom: React.FC<CheckboxCustomProps> = ({ label, img }) => {
         id={label}
         name="A3-confirmation"
         value={label}
+        required
         className="opacity-0 absolute h-8 w-8"
       />
       <div className="bg-white border border-gray-400 rounded-full w-5 h-5 flex shrink-0 justify-center items-center mr-2 focus-within:border-[var(--primary)]">

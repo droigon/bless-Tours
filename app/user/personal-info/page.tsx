@@ -3,12 +3,61 @@ import Accordion from "@/components/Accordion";
 import CheckboxCustom from "@/components/Checkbox";
 import { ChevronDownIcon, PencilIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
+import { useSession } from "next-auth/react"
 import Link from "next/link";
-import { ChangeEvent, useRef, useState } from "react";
+import { ChangeEvent, useRef, useState, useEffect } from "react";
+import { PhoneInput } from 'react-international-phone';
+import 'react-international-phone/style.css';
+
+interface UserData {
+  id: string;
+  FIRSTNAME:string;
+  LASTNAME:string;
+  PHONE_NUMBER:string;
+  EMAIL:string;
+  PROFILE_PICTURE:string;
+  isVerified:boolean;
+  // Add other properties based on your API response
+}
+
+interface ApiResponse {
+  data: UserData;
+}
+
+interface ErrorResponse {
+  message: string;
+}
+
+async function fetchUserData(userId: string): Promise<UserData | null> {
+  try {
+    const response = await fetch(`https://blesstours.onrender.com/api/v1/users/${userId}`);
+    if (!response.ok) {
+      const errorData: ErrorResponse = await response.json();
+      throw new Error(errorData.message);
+    }
+
+    const data: ApiResponse = await response.json();
+    return data.data;
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+    return null;
+  }
+}
+
+
 
 const Page = () => {
   const inputFileRef = useRef<HTMLInputElement>(null);
   const [imageSrc, setImageSrc] = useState<string>("/img/team-1.jpg");
+
+  const { data } = useSession();
+  const { data: session } = useSession();
+  const [userData, setUserData] = useState<UserData | null>(null);
+
+
+  const [phone, setPhone] = useState('');
+
+  const [isVerified, setisVerified] = useState(true);
 
   const handleImageClick = () => {
     if (inputFileRef.current) {
@@ -28,6 +77,27 @@ const Page = () => {
       reader.readAsDataURL(files[0]);
     }
   };
+
+  useEffect(() => {
+    
+    if (session) {
+      const userId = session.user?.id || "";
+
+      fetchUserData(userId)
+        .then((userData) => {
+          if (userData) {
+            setUserData(userData);
+            setisVerified(userData.isVerified);
+            setImageSrc(userData.PROFILE_PICTURE);
+          }
+        })
+        .catch((error) => {
+          console.error('Error fetching user data:', error);
+        });
+    }
+  }, [session]);
+  
+  
   return (
     <>
       <div className="bg-white p-4 sm:p-6 md:p-8 mb-6 rounded-2xl shadow-lg">
@@ -83,6 +153,7 @@ const Page = () => {
                   <input
                     type="text"
                     id="full-name"
+                    defaultValue={userData?.LASTNAME + ' ' + userData?.FIRSTNAME}
                     className="border w-full focus:outline-none py-3 px-6 rounded-2xl"
                     placeholder="Enter name"
                   />
@@ -91,28 +162,34 @@ const Page = () => {
                   <label
                     htmlFor="user-email"
                     className="block mb-2 font-medium clr-neutral-500">
-                    {} :
+                    Email :
                   </label>
                   <input
                     type="text"
+                    defaultValue={userData?.EMAIL}
                     id="user-email"
                     className="border w-full focus:outline-none py-3 px-6 rounded-2xl"
                     placeholder="Enter email"
                   />
                 </div>
+                
+                
                 <div className="col-span-12 lg:col-span-12">
                   <label
                     htmlFor="user-phone"
                     className="block mb-2 font-medium clr-neutral-500">
                     Phone (Optional) :
                   </label>
-                  <input
-                    type="text"
-                    id="user-phone"
-                    className="border w-full focus:outline-none py-3 px-6 rounded-2xl"
-                    placeholder="Enter number"
-                  />
+                  <PhoneInput
+                    defaultCountry="ua"
+                    value={(userData?.PHONE_NUMBER)?.toString()} 
+                    //defaultMask="111"
+                    inputClassName=" border w-full h-[200] focus:outline-none mx-16 py-16 px-32 m -32 rounded-3xl"
+                    onChange={(phone) => setPhone(phone)} />
+               
                 </div>
+                
+
                 <div className="col-span-12 lg:col-span-12">
                   <label className="block mb-2 font-medium clr-neutral-500">
                     Gender :
@@ -197,7 +274,7 @@ const Page = () => {
             <form action="#" className="grid grid-cols-12 gap-4">
               <div className="col-span-12 ">
                 <label className="block mb-2 font-medium clr-neutral-500">
-                  Location :
+                  Country :
                 </label>
                 <div className="border rounded-lg px-4 bg-transparent">
                   <select

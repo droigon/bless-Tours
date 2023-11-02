@@ -20,6 +20,8 @@ import {
   ShieldCheckIcon,
   UserGroupIcon,
 } from "@heroicons/react/24/outline";
+import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 import OnboardingPage from "./onboarding/page";
 import { useRouter } from 'next/navigation'
@@ -28,6 +30,7 @@ interface UserData {
   id: string;
   FIRSTNAME:string;
   EMAIL:string;
+  PROFILE_PICTURE:string;
   isVerified:boolean;
   // Add other properties based on your API response
 }
@@ -83,7 +86,8 @@ export default function RootLayout({
     return result;
   };
 
-  const heading = convertToTitleCase(path || " ");
+  const title = path.split("/user").pop();
+  const heading = title ? convertToTitleCase(title.toString()) : "";
   const Router = useRouter()
 
   const { data } = useSession();
@@ -96,7 +100,7 @@ export default function RootLayout({
   if (isVerified === false){
     setTimeout(() => {
       Router.push("/user/onboarding");
-    }, 1000); // Adjust the delay time as needed
+    }, 500); // Adjust the delay time as needed
   }
   
   
@@ -194,13 +198,22 @@ export default function RootLayout({
               className="col-span-12 md:col-span-5 lg:col-span-4 xl:col-span-3">
               <div className="p-3 sm:p-4 lg:p-6 rounded-2xl bg-white shadow-lg">
                 <div className="w-32 h-32 border border-[var(--primary)] rounded-full bg-white p-4 grid place-content-center relative mx-auto mb-10">
-                  <Image
+                {userData?.PROFILE_PICTURE ? <Image
                     width={96}
                     height={96}
-                    src="/img/team-1.jpg"
+                    
+                    src={userData?.PROFILE_PICTURE }
                     alt="image"
                     className="rounded-full"
-                  />
+                  />: <Image
+                  width={96}
+                  height={96}
+                  
+                  src="/img/team-1.jpg"
+                  alt="image"
+                  className="rounded-full"
+                />}
+                  
                   <div className="w-8 h-8 grid place-content-center rounded-full border-2 white text-white bg-primary absolute bottom-0 right-0">
                     <CheckIcon className="w-5 h-5" />
                   </div>
@@ -222,6 +235,16 @@ export default function RootLayout({
                         }`}>
                         <i className="las la-home text-xl"></i>
                         <span className="block font-medium">Home</span>
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        href="/tours"
+                        className={`link flex items-center gap-2 clr-neutral-500 hover:text-primary ${
+                          path === "/tours" && "text-primary"
+                        }`}>
+                        <i className="las la-home text-xl"></i>
+                        <span className="block font-medium">Tours</span>
                       </Link>
                     </li>
                     <li>
@@ -340,6 +363,7 @@ export default function RootLayout({
               style={{ zIndex: 2 }}
               className="col-span-12 md:col-span-7 lg:col-span-8 xl:col-span-9">
               {children}
+              <ToastContainer />
             </div>
           
           </div>

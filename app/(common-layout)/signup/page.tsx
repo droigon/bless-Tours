@@ -8,6 +8,7 @@ import Image from "next/image";
 import Link from "next/link";
 import CheckboxCustom from "@/components/Checkbox";
 import LoginImg from "@/public/img/login-img.png";
+import toast from "react-hot-toast";
 
 type FormInputs = {
   firstname: string;
@@ -20,7 +21,9 @@ const SignupPage = () => {
 
   const router = useRouter();
 
-  const register = async () => {
+  const register = async (event:any) => {
+    
+    event.preventDefault();
     const res = await fetch("https://blesstours.onrender.com/api/v1/users/signup", {
       method: "POST",
       body: JSON.stringify({
@@ -35,9 +38,17 @@ const SignupPage = () => {
     });
     
     const response = await res.json();
-    alert("Registration Successful");
     
-    console.log({ response });
+    
+    console.log(response);
+    if (response.status === "OK"){
+      toast.success("Registration Successful")
+      alert("Registration Successful");
+    }
+    else{
+      alert(response.message);
+      router.push('/signup');
+    }
     router.push('/auth/login');
   };
   const data = useRef<FormInputs>({
@@ -56,7 +67,7 @@ const SignupPage = () => {
       <div className="flex flex-wrap items-center gap-4 md:gap-0 mx-3">
         <div className="w-full lg:w-1/2">
           <div className="bg-white rounded-2xl p-4 md:p-6 lg:p-8">
-            <form action="#">
+            <form onSubmit={register}>
               <h3 className="mb-4 h3"> Let’s Get Started! </h3>
               <p className="mb-10">
                 Please enter your email address to join us
@@ -71,6 +82,7 @@ const SignupPage = () => {
                   </label>
                   <input
                     type="text"
+                    required
                     className="w-full bg-[var(--bg-1)] border focus:outline-none rounded-full py-3 px-5"
                     placeholder="Enter First Name"
                     id="first-name"
@@ -86,6 +98,7 @@ const SignupPage = () => {
                   </label>
                   <input
                     type="text"
+                    required
                     className="w-full bg-[var(--bg-1)] border focus:outline-none rounded-full py-3 px-5"
                     placeholder="Enter Last Name"
                     id="last-name"
@@ -100,6 +113,7 @@ const SignupPage = () => {
                   </label>
                   <input
                     type="text"
+                    required
                     className="w-full bg-[var(--bg-1)] border focus:outline-none rounded-full py-3 px-5"
                     placeholder="Enter Your Email"
                     id="enter-email"
@@ -113,7 +127,8 @@ const SignupPage = () => {
                     Enter Your Password
                   </label>
                   <input
-                    type="text"
+                    type="password"
+                    required
                     className="w-full bg-[var(--bg-1)] border focus:outline-none rounded-full py-3 px-5"
                     placeholder="Enter Your Password"
                     id="enter-password"
@@ -142,12 +157,12 @@ const SignupPage = () => {
                 </div>
                 
                 <div className="col-span-12">
-                  <Link
-                    href="#"
-                    onClick={register}
+                  <button
+                   type="submit"
+                    
                     className="link inline-flex items-center gap-2 py-3 px-6 rounded-full bg-primary text-white :bg-primary-400 hover:text-white font-semibold">
                     <span className="inline-block"> Signup </span>
-                  </Link>
+                  </button>
                 </div>
               </div>
             </form>

@@ -73,8 +73,11 @@ export const OPTIONS: any = {
         if (res.ok && user) {
           return user.data;
         }
+        return new Error('Invalid email or password');
+        //else return null;
         // Return null if user data could not be retrieved
-        return null;
+        
+
       },
     }),
   ],

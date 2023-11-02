@@ -243,7 +243,7 @@ export default function Page( {
             </Tab.List>
             <Tab.Panels>
               <Tab.Panel className="tab-pane fade show active" id="upcoming">
-                <h5 className="mb-4 font-medium"> Upcoming booking (2) </h5>
+                <h5 className="mb-4 font-medium">  </h5>
                 <ul className="flex flex-col gap-4">
                   {isLoading ? (
                   <p>Loading...</p>
@@ -256,7 +256,7 @@ export default function Page( {
                 </ul>
               </Tab.Panel>
               <Tab.Panel className="tab-pane fade" id="canceled">
-                <h5 className="mb-4 font-medium"> Canceled booking (3) </h5>
+                <h5 className="mb-4 font-medium">  </h5>
                 <ul className="flex flex-col gap-4">
                  
                 {isLoading ? (
@@ -270,7 +270,7 @@ export default function Page( {
                 </ul>
               </Tab.Panel>
               <Tab.Panel className="tab-pane fade" id="completed">
-                <h5 className="mb-4 font-medium"> Completed booking (4) </h5>
+                <h5 className="mb-4 font-medium"> </h5>
                 <ul className="flex flex-col gap-4">
                   
                 {isLoading ? (
