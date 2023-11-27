@@ -11,10 +11,12 @@ import { featuredPackage } from "@/public/data/featuredpackage";
 import { useState, useEffect } from 'react'
 import getTours from "@/public/data/api/requests";
 import getUsers from "@/public/data/api/req";
-
+import categoryEl from "@/public/img/category-section-el.png";
+import element1 from "@/public/img/element-1.png";
+import {url} from "@/utils/index";
 
 const fetchFeaturedPackages = async () => {
-  const response = await fetch('https://blesstours.onrender.com/api/v1/tours/?page=1&limit=9');
+  const response = await fetch(`${url}/api/v1/tours/?page=1&limit=9`);
   const data = await response.json();
   console.log("get tours",data);
   return data.data || [];
@@ -22,7 +24,7 @@ const fetchFeaturedPackages = async () => {
 
 
 const PackageCard = ({ packageInfo }) => {
-  const { _id, NAME, DURATION, AMOUNT,GUESTS } = packageInfo;
+  const { _id, NAME, DURATION, IMAGES, AMOUNT,GUESTS } = packageInfo;
 
   return (
     <div className="col-span-12 md:col-span-6 xl:col-span-4 group" key={_id}>
@@ -35,8 +37,8 @@ const PackageCard = ({ packageInfo }) => {
                         <Image
                           width={400}
                           height={306}
-                          src="/img/featured-package-1.jpg"
-                          alt="image"
+                          src={IMAGES[0]}
+                          alt={`image ${IMAGES}`}
                           className="w-full rounded-2xl"
                         />
                       
@@ -128,18 +130,13 @@ const Featured = () => {
   }, []);
 
 
-
-    // run it, run it
-
-  //console.log(tours)
-
-  
   
 
 
   return (
     <div className="relative py-[60px] lg:py-[120px] px-3">
       <div className="container">
+     
         <div className="flex flex-wrap items-center gap-4 justify-between mb-10 lg:mb-12">
           <div>
             <SubHeadingBtn text="Featured Package" classes="bg-white" />

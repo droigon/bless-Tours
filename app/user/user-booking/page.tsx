@@ -8,6 +8,7 @@ import {
 import Link from "next/link";
 import React, { useState, useEffect } from 'react';
 import { useSession } from "next-auth/react"
+import {url} from "@/utils/index";
 
 
 function classNames(...classes: any[]) {
@@ -30,8 +31,8 @@ interface BookingData {
   location:string;
   guests:number;
   amount:number;
-  checkinDate: string;
-  checkoutDate:string;
+  checkinDate: number;
+  checkoutDate:number;
 }
 
 interface TourResponse {
@@ -45,8 +46,21 @@ interface TourData {
 
 
 const PackageCard: React.FC<{ packageInfo: BookingData }> = ({ packageInfo }) => {
+  
+
   const { _id, name, status,  amount, guests, location, checkinDate, checkoutDate } = packageInfo;
 
+  const checkin: Date = new Date(checkinDate * 1000);
+  const checkout: Date = new Date(checkoutDate * 1000);
+
+  const formattedcheckinDate: string = checkin.toLocaleDateString('en-US', {
+    month: 'short', // Display full month name
+    day: 'numeric', // Display day of the month
+  });
+  const formattedcheckOutDate: string = checkout.toLocaleDateString('en-US', {
+    month: 'short', // Display full month name
+    day: 'numeric', // Display day of the month
+  });
   return (
     <>
  
@@ -75,12 +89,12 @@ const PackageCard: React.FC<{ packageInfo: BookingData }> = ({ packageInfo }) =>
                                 </span>
                               </li>
                               <li>
-                                <span className="inline-block text-sm">
+                                <span className="inline-block ml-4 text-sm">
                                   <span className="inline-block clr-neutral-500">
-                                    Travel Class :
+                                    Location :
                                   </span>
                                   <span className="inline-block text-[var(--neutral-700)] font-medium">
-                                    Bussiness
+                                    {packageInfo.location}
                                   </span>
                                 </span>
                               </li>
@@ -98,18 +112,18 @@ const PackageCard: React.FC<{ packageInfo: BookingData }> = ({ packageInfo }) =>
                         <div className="col-span-12 lg:col-span-6 xl:col-span-4">
                           <p className="clr-neutral-500"> Check in date </p>
                           <h5 className="mb-0 font-medium">
-                            {checkinDate}
+                            {formattedcheckinDate}
                           </h5>
                         </div>
                         <div className="col-span-12 lg:col-span-6 xl:col-span-4">
                           <p className="clr-neutral-500"> Check out date </p>
                           <h5 className="mb-0 font-medium">
-                          {checkoutDate}
+                          {formattedcheckOutDate}
                           </h5>
                         </div>
                         <div className="col-span-12 lg:col-span-6 xl:col-span-4">
-                          <p className="clr-neutral-500"> Booked by </p>
-                          <h5 className="mb-0 font-medium"> Guy Hawkins </h5>
+                          <p className="clr-neutral-500"> Amount</p>
+                          <h5 className="mb-0 font-medium"> ${amount} </h5>
                         </div>
                       </div>
                     </div>
@@ -121,7 +135,7 @@ const PackageCard: React.FC<{ packageInfo: BookingData }> = ({ packageInfo }) =>
 
 async function fetchBookingData(userId: string): Promise<BookingData[] > {
   try {
-    const response = await fetch(`https://blesstours.onrender.com/api/v1/booking/user/${userId}`);
+    const response = await fetch(`${url}/api/v1/booking/user/${userId}`);
     if (!response.ok) {
       const errorData: ErrorResponse = await response.json();
       throw new Error(errorData.message);

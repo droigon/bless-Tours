@@ -1,14 +1,9 @@
-"use client"
+"use client";
 
 import { SessionProvider } from "next-auth/react";
-import { BookProvider } from "@/providers/BookProvider";
 
-const AuthProvider = ({children}) => {
-  return (
-    <BookProvider>
-    <SessionProvider>{children}</SessionProvider>
-    </BookProvider>
-  )
-}
+const AuthProvider = ({ children }) => {
+  return <SessionProvider>{children}</SessionProvider>;
+};
 
-export default AuthProvider
+export default AuthProvider;

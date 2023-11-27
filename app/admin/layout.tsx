@@ -47,9 +47,9 @@ export default function RootLayout({
             <ul className="py-5">
               <li>
                 <Link
-                  href="/admin-dashboard"
+                  href="/admin/admin-dashboard"
                   className={`flex items-center hover:bg-primary hover:text-white gap-2 rounded-md px-5 py-3 duration-300 ${
-                    path == "/admin-dashboard" && "bg-primary text-white"
+                    path == "/admin/admin-dashboard" && "bg-primary text-white"
                   }`}>
                   <BuildingStorefrontIcon className="w-5 h-5" />
                   Dashboard
@@ -58,7 +58,7 @@ export default function RootLayout({
             </ul>
             <span className="text-xs">Pages</span>
             <ul className="py-5 flex flex-col gap-1 font-medium">
-              {sidenavData.map(({ icon, id, name, submenus, url }) => (
+              {sidenavData.map(({ icon, id, name, url }) => (
                 <li key={id}>
                   {url ? (
                     <Link
@@ -81,34 +81,7 @@ export default function RootLayout({
                         {icon}
                         {name}
                       </span>
-                      {submenus && (
-                        <ChevronDownIcon
-                          className={`w-5 h-5 duration-300 ${
-                            id == opened && "rotate-180"
-                          }`}
-                        />
-                      )}
                     </button>
-                  )}
-                  {submenus && (
-                    <AnimateHeight
-                      duration={300}
-                      height={opened == id ? "auto" : 0}>
-                      <ul className={`px-3 mt-1 flex flex-col gap-1`}>
-                        {submenus.map((item) => (
-                          <li key={item.title}>
-                            <Link
-                              href={item.url}
-                              className={`flex gap-2 items-center pl-4 pr-1 py-3 hover:bg-violet-200 duration-300 rounded-md ${
-                                item.url == path && "bg-violet-200"
-                              }`}>
-                              {icon}
-                              {item.title}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    </AnimateHeight>
                   )}
                 </li>
               ))}
@@ -151,7 +124,9 @@ export default function RootLayout({
               <ProfileDropdown />
             </div>
           </header>
+
           <section>{children}</section>
+          
         </div>
       </section>
     </>

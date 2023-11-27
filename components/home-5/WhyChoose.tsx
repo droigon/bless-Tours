@@ -6,12 +6,19 @@ import "swiper/css";
 import "swiper/css/navigation";
 import { Navigation } from "swiper";
 import SubHeadingBtn from "../SubHeadingBtn";
+import categoryEl from "@/public/img/category-section-el.png";
+import element1 from "@/public/img/element-1.png";
 
 const WhyChoose = () => {
   return (
     <section className="py-[60px] lg:py-[120px] relative">
       <div className="px-3">
         <div className="container ">
+        <Image
+        src={element1}
+        className="hidden z-1000 xl:block absolute left-0 top-[600px] "
+        alt="img"
+      />
           <div className="max-w-[570px] mx-auto flex flex-col items-center text-center">
             <SubHeadingBtn
               text="Why choose us"

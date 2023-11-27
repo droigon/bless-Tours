@@ -2,9 +2,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import LoginImg from "@/public/img/login-img.png";
-
+import {useRouter} from "next/navigation";
 import { signIn } from "next-auth/react";
-import { useRef } from "react";
+import { useRef, useState } from "react";
+import { toast } from "react-toastify";
 
 import Button from "@/components/Button";
 import TextBox from "@/components/TextBox";
@@ -19,10 +20,10 @@ interface IProps {
 
   const email = useRef("");
   const pass = useRef("");
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
-  const onSubmit = async () => {
-    
-    console.log("ellll",email,pass)
+  /*const onSubmit = async () => {
     const result = await signIn("credentials", {
       email: email.current,
       password: pass.current,
@@ -30,8 +31,37 @@ interface IProps {
       callbackUrl: "/admin/admin-dashboard",
       role:"admin",
     });
-    console.log(result)
+  };*/
+
+  const onSubmit = async (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    try {
+      e.preventDefault();
+      setLoading(true);
+
+      
+      const result = await signIn("credentials", {
+        email: email.current,
+        password: pass.current,
+        callbackUrl: "/admin/admin-dashboard",
+        role:"admin",
+        redirect: false,
+      });
+      console.log("login result", result);
+      if (result?.error) {
+        throw new Error(result?.error);
+      } else {
+        
+        router.push("/admin/admin-dashboard");
+      }
+    } catch (error: any) {
+      toast.error(error.message);
+    } finally {
+      setLoading(false);
+    }
   };
+
 
 
   return (
@@ -68,7 +98,7 @@ interface IProps {
                       Enter Your Password
                     </label>
                     <input
-                      type="text"
+                      type="password"
                       onChange={(e) => (pass.current = e.target.value)}
                       className="w-full bg-[var(--bg-1)] border focus:outline-none rounded-full py-3 px-5 mb-3"
                       placeholder="Enter Your Password"
@@ -81,23 +111,14 @@ interface IProps {
                     </Link>
                   </div>
                   <div className="col-span-12">
-                    <p className="mb-0">
-                      Don&apos;t have an account?{" "}
-                      <Link
-                        href="/signup"
-                        className="link font-semibold text-primary">
-                        Signup
-                      </Link>
-                    </p>
                   </div>
                   <div className="col-span-12">
                   
-                    <Link
-                      href="#"
+                    <button
                       onClick={onSubmit}
                       className="link inline-flex items-center gap-2 py-3 px-6 rounded-full bg-primary text-white :bg-primary-400 hover:text-white font-semibold">
-                      <span className="inline-block"> Signin </span>
-                    </Link>
+                      <span className="inline-block"> {loading ? "Signin..." : "Signin"}</span>
+                    </button>
                   </div>
                 </div>
               </form>

@@ -90,7 +90,7 @@ const Page = () => {
                       <td className="py-3 lg:py-4 px-2">{roomNo}</td>
                       <td className={`py-3 lg:py-4 px-2`}>
                         <div className={`w-32`}>
-                          <HeadlessList initialValue={status} />
+                         
                         </div>
                       </td>
                       <td className="py-3 lg:py-4 px-2 flex gap-2 items-center">

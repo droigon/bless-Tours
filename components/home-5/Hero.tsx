@@ -30,8 +30,6 @@ const Hero = () => {
 
   const [location, setLocation] = useState("");
 
-
-  
   let [manufacturer, setManuFacturer] = useState("aaa");
   const [model, setModel] = useState("bbb");
 
@@ -41,7 +39,7 @@ const Hero = () => {
   const router = useRouter();
 
   const handleSearch = () => {
-    if (query === "" && value === 0 ) {
+    if (query === "" && value === 0) {
       return alert("Please provide some input");
     }
 
@@ -51,9 +49,8 @@ const Hero = () => {
     //console.log("wwww",locations.indexOf("name",1))
 
     //const countryNames = locations.map((location: { name: any; }) => location.name);
-    
 
-    updateSearchParams(query , value);
+    updateSearchParams(query, value);
   };
 
   const updateSearchParams = (locations: string, value: number) => {
@@ -71,21 +68,20 @@ const Hero = () => {
     if (value) {
       searchParams.set("AMOUNT", value.toString());
     } else {
-       searchParams.delete("AMOUNT");
+      searchParams.delete("AMOUNT");
     }
 
-
-    const newPathname = `${window.location.pathname}search/?${searchParams.toString()}`;
+    const newPathname = `${
+      window.location.pathname
+    }search/?${searchParams.toString()}`;
     router.push(newPathname);
-
-
-    
   };
   return (
-    <div className="relative px-3  after:bg-no-repeat after:w-full after:h-full after:absolute after:right-20 after:top-20 after:bg-right-top after:-z-[2] bg-cover bg-no-repeat bg-center" >
+    <div className="relative px-3  after:bg-no-repeat after:w-full after:h-full after:absolute after:right-20 after:top-20 after:bg-right-top after:-z-[2] bg-cover bg-no-repeat bg-center">
       <div
         onClick={() => setOpen(true)}
-        className="absolute top-[83px] right-[42%] hidden xl:block cursor-pointer z-10">
+        className="absolute top-[83px] right-[42%] hidden xl:block cursor-pointer z-10"
+      >
         <Image
           width={48}
           height={48}
@@ -111,15 +107,6 @@ const Hero = () => {
             </p>
           </div>
         </div>
-       
-      
-      
-
-            
-          
-          
-  
-         
       </div>
       <ModalVideo
         channel="vimeo"
@@ -128,86 +115,7 @@ const Hero = () => {
         onClose={() => setOpen(false)}
       />
 
-        <div className="row ">
-          <div className="col-span-12">
-            <Swiper
-              loop={true}
-              slidesPerView="auto"
-              spaceBetween={8}
-              navigation={{
-                nextEl: ".btn-next",
-                prevEl: ".btn-prev",
-              }}
-              breakpoints={{
-                768: {
-                  slidesPerView: 2,
-                },
-                992: {
-                  slidesPerView: 3,
-                },
-              }}
-              modules={[Navigation]}
-              className="swiper choice-slider z-1 mb-16">
-              <SwiperSlide className="px-5 my-8">
-                <div className="border rounded-2xl hover:shadow-[rgba(149,157,165,0.2)_0px_8px_24px] hover:border-none p-6 xl:p-8 text-center duration-300">
-                <Link
-                    href="/search?category=land&limit=5">
-                  <Image
-                    width={60}
-                    height={60}
-                    src="/img/duotone-home.png"
-                    alt="image"
-                    className=" mx-auto mb-6"
-                  />
-                  <h4 className="mb-4 text-2xl font-semibold"> Holy Land </h4>
-                  <p className="mb-0">
-                  Holy Land Tours: Embark on a Sacred Pilgrimage to Ancient Sites, where History and Spirituality Unite in a Profound Journey of Discovery.
-                  </p>
-                  </Link>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide className="px-5 my-8">
-                <div className="border rounded-2xl hover:shadow-[rgba(100,100,111,0.2)_0px_7px_29px_0px] hover:border-none p-6 xl:p-8 text-center duration-300">
-                <Link
-                    href="/search?category=city&limit=5">
-                  <Image
-                    width={60}
-                    height={60}
-                    src="/img/duotone-discount.png"
-                    alt="image"
-                    className=" mx-auto mb-6"
-                  />
-                  <h4 className="mb-4 text-2xl font-semibold">
-                   Holy City
-                  </h4>
-                  <p className="mb-0">
-                  Embark on a Spiritual Journey and Explore the Divine Beauty of Sacred Places, Enriching Your Soul Along the Way.
-                  </p>
-                  </Link>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide className="px-5 my-8">
-                <div className="border rounded-2xl hover:shadow-[rgba(100,100,111,0.2)_0px_7px_29px_0px] hover:border-none p-6 xl:p-8 text-center duration-300">
-                <Link
-                    href="/search?category=Vacation&limit=5">
-                  <Image
-                    width={60}
-                    height={60}
-                    src="/img/duotone-support.png"
-                    alt="image"
-                    className=" mx-auto mb-6"
-                  />
-                  <h4 className="mb-4 text-2xl font-semibold">Others</h4>
-                  <p className="mb-0">
-                    Browse other tour category
-                  </p>
-                  </Link>
-                </div>
-              </SwiperSlide>
-            </Swiper>
-          </div>
-          </div>
-
+  
     </div>
   );
 };

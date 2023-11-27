@@ -9,7 +9,7 @@ import { Navigation } from "swiper";
 import Link from "next/link";
 import { useState } from "react";
 import { Tab } from "@headlessui/react";
-import { CheckIcon, StarIcon } from "@heroicons/react/20/solid";
+import { CheckIcon, StarIcon } from "@heroicons/react/20/solid"; 
 import {
   ArrowLongLeftIcon,
   ArrowLongRightIcon,
@@ -27,6 +27,7 @@ import {
 } from "@heroicons/react/24/outline";
 import HotelDetailsFeaturedRoom from "@/components/HotelDetailsFeaturedRoom";
 import CheckboxCustom from "@/components/Checkbox";
+import {url} from "@/utils/index";
 const featuredHotelData = [
   {
     id: 1,
@@ -54,19 +55,59 @@ function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-//export default async function Page({params}) {
+interface PackageInfo {
+  _id: string;
+  NAME: string;
+  LOCATION: string;
+  DESCRIPTION: string;
+  IMAGE: string;
+  PRICE: number;
+  AMOUNT: 46456;
+  CANCELLATION_POLICY: string;
+  CATEGORY: string;
+  DURATION: number;
+  EXCLUSION: [string];
+  GUESTS: number;
+  ID: string;
+  IMAGES: [string];
+  INCLUSION: [string];
+  ITENARY: [
+    {
+      description: string;
+      location: string;
+      name: string;
+      title: string;
+    }
+  ];
+  REFUND_POLICY: string;
+  VENDOR_ID: string;
+}
 
-export default function Page({ params }: { params: { id: string } }) {
-//export default async function Page({ params : {id} }) {
+const Tour = async (id: string): Promise<PackageInfo> => {
+  try {
+    const response = await fetch(
+      `${url}/api/v1/tours/${id}`
+    );
+    const res = await response.json();
+    if (res.statusCode == 200) {
+      return res.data;
+    } else {
+      throw new Error(res.message);
+    }
+  } catch (error: any) {
+    throw new Error(`failed to fetch tour:${error.message}`);
+  }
+};
 
-  const [data, setData] = useState(featuredHotelData);
+export default async function Page({ params }: { params: { id: string } }) {
+  const data = await Tour(params.id);
+  console.log("listing data:", data);
+
   const tooltipStyle = {
     backgroundColor: "#3539E9",
     color: "#fff",
     borderRadius: "10px",
   };
-
-
 
   return (
     <main>
@@ -96,99 +137,22 @@ export default function Page({ params }: { params: { id: string } }) {
                   },
                 }}
                 modules={[Navigation]}
-                className="swiper property-gallery-slider">
+                className="swiper property-gallery-slider"
+              >
                 <div className="swiper-wrapper">
-                  <SwiperSlide className="swiper-slide">
-                    <Link
-                      href="/img/hotel-gallery-1.jpg"
-                      className="link block property-gallery">
-                      <Image
-                        width={618}
-                        height={600}
-                        src="/img/hotel-gallery-1.jpg"
-                        alt="image"
-                        className=" rounded-2xl"
-                      />
-                    </Link>
-                  </SwiperSlide>
-                  <SwiperSlide className="swiper-slide">
-                    <Link
-                      href="/img/hotel-gallery-2.jpg"
-                      className="link block property-gallery">
-                      <Image
-                        width={618}
-                        height={600}
-                        src="/img/hotel-gallery-2.jpg"
-                        alt="image"
-                        className=" rounded-2xl"
-                      />
-                    </Link>
-                  </SwiperSlide>
-                  <SwiperSlide className="swiper-slide">
-                    <Link
-                      href="/img/hotel-gallery-3.jpg"
-                      className="link block property-gallery">
-                      <Image
-                        width={618}
-                        height={600}
-                        src="/img/hotel-gallery-3.jpg"
-                        alt="image"
-                        className=" rounded-2xl"
-                      />
-                    </Link>
-                  </SwiperSlide>
-                  <SwiperSlide className="swiper-slide">
-                    <Link
-                      href="/img/hotel-gallery-3.jpg"
-                      className="link block property-gallery">
-                      <Image
-                        width={618}
-                        height={600}
-                        src="/img/hotel-gallery-3.jpg"
-                        alt="image"
-                        className=" rounded-2xl"
-                      />
-                    </Link>
-                  </SwiperSlide>
-                  <SwiperSlide className="swiper-slide">
-                    <Link
-                      href="/img/hotel-gallery-1.jpg"
-                      className="link block property-gallery">
-                      <Image
-                        width={618}
-                        height={600}
-                        src="/img/hotel-gallery-1.jpg"
-                        alt="image"
-                        className=" rounded-2xl"
-                      />
-                    </Link>
-                  </SwiperSlide>
-                  <SwiperSlide className="swiper-slide">
-                    <Link
-                      href="/img/hotel-gallery-2.jpg"
-                      className="link block property-gallery">
-                      <Image
-                        width={618}
-                        height={600}
-                        src="/img/hotel-gallery-2.jpg"
-                        alt="image"
-                        className=" rounded-2xl"
-                      />
-                    </Link>
-                  </SwiperSlide>
-                  <SwiperSlide className="swiper-slide">
-                    <Link
-                      href="/img/hotel-gallery-3.jpg"
-                      className="link block property-gallery">
-                      <Image
-                        width={618}
-                        height={600}
-                        src="/img/hotel-gallery-3.jpg"
-                        alt="image"
-                        className=" rounded-2xl"
-                      />
-                    </Link>
-                  </SwiperSlide>
+                  {data.IMAGES.map((image, index) => {
+                    return (
+                      <SwiperSlide className="swiper-slide" key={index}>
+                        <Image
+                          width={618}
+                          height={600}
+                          src={image}
+                          alt={`image ${index}`}
+                          className=" rounded-2xl"
+                        />
+                      </SwiperSlide>
+                    );
+                  })}
                 </div>
                 <button className="btn-prev absolute top-[45%] left-4 z-[1] bg-white w-8 h-8 rounded-full flex items-center justify-center hover:bg-primary hover:text-white duration-300">
                   <ChevronLeftIcon className="w-5 h-5" />
@@ -209,26 +173,29 @@ export default function Page({ params }: { params: { id: string } }) {
               <div className="section-space--sm">
                 <div className="p-3 sm:p-4 lg:p-6 bg-white rounded-2xl mb-10">
                   <div className="flex items-center justify-between flex-wrap gap-3 mb-8">
-                    <h2 className="mt-4 h2 mb-0"> Burj Al Arab </h2>
+                    <h2 className="mt-4 h2 mb-0"> {data.NAME} </h2>
                     <ul className="flex gap-3 items-center">
                       <li>
                         <Link
                           href="#"
-                          className="link w-8 h-8 grid place-content-center bg-[var(--primary-light)] text-primary rounded-full hover:bg-primary hover:text-white">
+                          className="link w-8 h-8 grid place-content-center bg-[var(--primary-light)] text-primary rounded-full hover:bg-primary hover:text-white"
+                        >
                           <HeartIcon className="h-5 w-5" />
                         </Link>
                       </li>
                       <li>
                         <Link
                           href="#"
-                          className="link w-8 h-8 grid place-content-center bg-[var(--primary-light)] text-primary rounded-full hover:bg-primary hover:text-white">
+                          className="link w-8 h-8 grid place-content-center bg-[var(--primary-light)] text-primary rounded-full hover:bg-primary hover:text-white"
+                        >
                           <ArrowsRightLeftIcon className="w-5 h-5" />
                         </Link>
                       </li>
                       <li>
                         <Link
                           href="#"
-                          className="link w-8 h-8 grid place-content-center bg-[var(--primary-light)] text-primary rounded-full hover:bg-primary hover:text-white">
+                          className="link w-8 h-8 grid place-content-center bg-[var(--primary-light)] text-primary rounded-full hover:bg-primary hover:text-white"
+                        >
                           <ShareIcon className="w-5 h-5" />
                         </Link>
                       </li>
@@ -238,13 +205,13 @@ export default function Page({ params }: { params: { id: string } }) {
                     <li>
                       <div className="flex items-center gap-2">
                         <MapPinIcon className="w-5 h-5 text-[var(--secondary-500)]" />
-                        <p className="mb-0"> 3890 Poplar Dr. </p>
+                        <p className="mb-0"> {data.LOCATION} </p>
                       </div>
                     </li>
                     <li className="text-primary text-lg">•</li>
                     <li>
                       <p className="mb-0">
-                        ID: <span className="text-primary">12546</span>
+                        ID: <span className="text-primary">{data.ID}</span>
                       </p>
                     </li>
                     <li className="text-primary text-lg">•</li>
@@ -272,7 +239,8 @@ export default function Page({ params }: { params: { id: string } }) {
                     <li>
                       <div
                         data-tooltip-id="parking"
-                        className="grid place-content-center w-10 h-10 rounded-full bg-[var(--bg-2)] text-primary">
+                        className="grid place-content-center w-10 h-10 rounded-full bg-[var(--bg-2)] text-primary"
+                      >
                         <Image
                           width={28}
                           height={28}
@@ -285,7 +253,8 @@ export default function Page({ params }: { params: { id: string } }) {
                     <li>
                       <div
                         data-tooltip-id="restaurent"
-                        className="grid place-content-center w-10 h-10 rounded-full bg-[var(--bg-2)] text-primary">
+                        className="grid place-content-center w-10 h-10 rounded-full bg-[var(--bg-2)] text-primary"
+                      >
                         <Image
                           width={28}
                           height={28}
@@ -298,7 +267,8 @@ export default function Page({ params }: { params: { id: string } }) {
                     <li>
                       <div
                         data-tooltip-id="room"
-                        className="grid place-content-center w-10 h-10 rounded-full bg-[var(--bg-2)] text-primary">
+                        className="grid place-content-center w-10 h-10 rounded-full bg-[var(--bg-2)] text-primary"
+                      >
                         <Image
                           width={28}
                           height={28}
@@ -311,7 +281,8 @@ export default function Page({ params }: { params: { id: string } }) {
                     <li>
                       <div
                         data-tooltip-id="fitness"
-                        className="grid place-content-center w-10 h-10 rounded-full bg-[var(--bg-2)] text-primary">
+                        className="grid place-content-center w-10 h-10 rounded-full bg-[var(--bg-2)] text-primary"
+                      >
                         <Image
                           width={28}
                           height={28}
@@ -324,7 +295,8 @@ export default function Page({ params }: { params: { id: string } }) {
                     <li>
                       <div
                         data-tooltip-id="swimming"
-                        className="grid place-content-center w-10 h-10 rounded-full bg-[var(--bg-2)] text-primary">
+                        className="grid place-content-center w-10 h-10 rounded-full bg-[var(--bg-2)] text-primary"
+                      >
                         <Image
                           width={28}
                           height={28}
@@ -337,7 +309,8 @@ export default function Page({ params }: { params: { id: string } }) {
                     <li>
                       <div
                         data-tooltip-id="laundry"
-                        className="grid place-content-center w-10 h-10 rounded-full bg-[var(--bg-2)] text-primary">
+                        className="grid place-content-center w-10 h-10 rounded-full bg-[var(--bg-2)] text-primary"
+                      >
                         <Image
                           width={28}
                           height={28}
@@ -350,7 +323,8 @@ export default function Page({ params }: { params: { id: string } }) {
                     <li>
                       <div
                         data-tooltip-id="free"
-                        className="grid place-content-center w-10 h-10 rounded-full bg-[var(--bg-2)] text-primary">
+                        className="grid place-content-center w-10 h-10 rounded-full bg-[var(--bg-2)] text-primary"
+                      >
                         <Image
                           width={28}
                           height={28}
@@ -406,23 +380,16 @@ export default function Page({ params }: { params: { id: string } }) {
                 </div>
                 <div className="p-3 sm:p-4 lg:p-6 bg-white rounded-2xl mb-10">
                   <h4 className="mb-5 text-2xl font-semibold"> Description </h4>
-                  <p className="mb-5 clr-neutral-500">
-                    The Burj Al Arab is a luxurious 7-star hotel located in
-                    Dubai, United Arab Emirates. It is known for its distinctive
-                    sail-shaped silhouette and its iconic status as one of the
-                    world&apos;s most luxurious hotels. The hotel offers a
-                    variety of amenities and services, including private butler
-                    service, luxurious suites, a spa, several restaurants and
-                    bars, and access to the hotel&apos;s private beach.
-                  </p>
-                  <Link
-                    href="#"
-                    className="link flex items-center gap-2 text-primary">
+                  <p className="mb-5 clr-neutral-500">{data.DESCRIPTION}</p>
+                  <span
+                    // href="#"
+                    className="link flex items-center gap-2 text-primary"
+                  >
                     <span className="font-semibold inline-block">
                       Read More
                     </span>
                     <ArrowLongRightIcon className="w-5 h-5" />
-                  </Link>
+                  </span>
                 </div>
                 <div className="p-3 sm:p-4 lg:p-6 bg-white rounded-2xl mb-10">
                   <h4 className="mb-5 text-2xl font-semibold"> Services </h4>
@@ -430,273 +397,96 @@ export default function Page({ params }: { params: { id: string } }) {
                     <div className="grid grid-cols-12 gap-4 lg:gap-6">
                       <div className="col-span-12 md:col-span-4 lg:col-span-3">
                         <ul className="flex flex-col gap-4">
-                          <li>
-                            <div className="flex items-center gap-2">
-                              <div className="w-6 h-6 grid place-content-center rounded-full shrink-0 bg-[var(--primary-light)]">
-                                <i className="las la-check text-lg text-primary"></i>
-                              </div>
-                              <span className="inline-block">Dry cleaning</span>
-                            </div>
-                          </li>
-                          <li>
-                            <div className="flex items-center gap-2">
-                              <div className="w-6 h-6 grid place-content-center rounded-full shrink-0 bg-[var(--primary-light)]">
-                                <i className="las la-check text-lg text-primary"></i>
-                              </div>
-                              <span className="inline-block">
-                                Special service
-                              </span>
-                            </div>
-                          </li>
-                          <li>
-                            <div className="flex items-center gap-2">
-                              <div className="w-6 h-6 grid place-content-center rounded-full shrink-0 bg-[var(--primary-light)]">
-                                <i className="las la-check text-lg text-primary"></i>
-                              </div>
-                              <span className="inline-block"> Concierge </span>
-                            </div>
-                          </li>
-                        </ul>
-                      </div>
-                      <div className="col-span-12 md:col-span-4 lg:col-span-3">
-                        <ul className="flex flex-col gap-4">
-                          <li>
-                            <div className="flex items-center gap-2">
-                              <div className="w-6 h-6 grid place-content-center rounded-full shrink-0 bg-[var(--primary-light)]">
-                                <i className="las la-check text-lg text-primary"></i>
-                              </div>
-                              <span className="inline-block">
-                                Personalization
-                              </span>
-                            </div>
-                          </li>
-                          <li>
-                            <div className="flex items-center gap-2">
-                              <div className="w-6 h-6 grid place-content-center rounded-full shrink-0 bg-[var(--primary-light)]">
-                                <i className="las la-check text-lg text-primary"></i>
-                              </div>
-                              <span className="inline-block">Room Service</span>
-                            </div>
-                          </li>
-                          <li>
-                            <div className="flex items-center gap-2">
-                              <div className="w-6 h-6 grid place-content-center rounded-full shrink-0 bg-[var(--primary-light)]">
-                                <i className="las la-check text-lg text-primary"></i>
-                              </div>
-                              <span className="inline-block">Waiting Area</span>
-                            </div>
-                          </li>
-                        </ul>
-                      </div>
-                      <div className="col-span-12 md:col-span-4 lg:col-span-3">
-                        <ul className="flex flex-col gap-4">
-                          <li>
-                            <div className="flex items-center gap-2">
-                              <div className="w-6 h-6 grid place-content-center rounded-full shrink-0 bg-[var(--primary-light)]">
-                                <i className="las la-check text-lg text-primary"></i>
-                              </div>
-                              <span className="inline-block">
-                                Doctor on Call
-                              </span>
-                            </div>
-                          </li>
-                          <li>
-                            <div className="flex items-center gap-2">
-                              <div className="w-6 h-6 grid place-content-center rounded-full shrink-0 bg-[var(--primary-light)]">
-                                <i className="las la-check text-lg text-primary"></i>
-                              </div>
-                              <span className="inline-block"> Debit Card </span>
-                            </div>
-                          </li>
-                          <li>
-                            <div className="flex items-center gap-2">
-                              <div className="w-6 h-6 grid place-content-center rounded-full shrink-0 bg-[var(--primary-light)]">
-                                <i className="las la-check text-lg text-primary"></i>
-                              </div>
-                              <span className="inline-block"> Heating </span>
-                            </div>
-                          </li>
-                        </ul>
-                      </div>
-                      <div className="col-span-12 md:col-span-4 lg:col-span-3">
-                        <ul className="flex flex-col gap-4">
-                          <li>
-                            <div className="flex items-center gap-2">
-                              <div className="w-6 h-6 grid place-content-center rounded-full shrink-0 bg-[var(--primary-light)]">
-                                <i className="las la-check text-lg text-primary"></i>
-                              </div>
-                              <span className="inline-block"> Alarm </span>
-                            </div>
-                          </li>
-                          <li>
-                            <div className="flex items-center gap-2">
-                              <div className="w-6 h-6 grid place-content-center rounded-full shrink-0 bg-[var(--primary-light)]">
-                                <i className="las la-check text-lg text-primary"></i>
-                              </div>
-                              <span className="inline-block"> Pets Allow </span>
-                            </div>
-                          </li>
-                          <li>
-                            <div className="flex items-center gap-2">
-                              <div className="w-6 h-6 grid place-content-center rounded-full shrink-0 bg-[var(--primary-light)]">
-                                <i className="las la-check text-lg text-primary"></i>
-                              </div>
-                              <span className="inline-block">Spa Massage</span>
-                            </div>
-                          </li>
+                          {data.INCLUSION.map((service, index) => {
+                            return (
+                              <li key={index}>
+                                <div className="flex items-center gap-2">
+                                  <div className="w-6 h-6 grid place-content-center rounded-full shrink-0 bg-[var(--primary-light)]">
+                                    <i className="las la-check text-lg text-primary"></i>
+                                  </div>
+                                  <span className="inline-block">
+                                    {service}
+                                  </span>
+                                </div>
+                              </li>
+                            );
+                          })}
                         </ul>
                       </div>
                     </div>
                   </div>
-                  <Link href="#" className="btn-outline  font-semibold">
-                    Read More
-                  </Link>
-                </div>
-                <div className="p-3 sm:p-4 lg:p-6 bg-white rounded-2xl mb-10">
-                  <h4 className="mb-5 text-2xl font-semibold"> Advantages </h4>
-                  <ul className="flex flex-col gap-4 mb-5">
-                    <li>
-                      <div className="flex gap-4">
-                        <div className="w-6 h-6 grid place-content-center rounded-full shrink-0 bg-[var(--primary-light)]">
-                          <i className="las la-check text-lg text-primary"></i>
-                        </div>
-                        <span className="inline-block">
-                          World-class luxury: The hotel is known for its opulent
-                          design and over-the-top luxury.
-                        </span>
-                      </div>
-                    </li>
-                    <li>
-                      <div className="flex gap-4">
-                        <div className="w-6 h-6 grid place-content-center rounded-full shrink-0 bg-[var(--primary-light)]">
-                          <i className="las la-check text-lg text-primary"></i>
-                        </div>
-                        <span className="inline-block">
-                          Unmatched service: The hotel prides itself on its
-                          personalized service and attention to detail.
-                        </span>
-                      </div>
-                    </li>
-                    <li>
-                      <div className="flex gap-4">
-                        <div className="w-6 h-6 grid place-content-center rounded-full shrink-0 bg-[var(--primary-light)]">
-                          <i className="las la-check text-lg text-primary"></i>
-                        </div>
-                        <span className="inline-block">
-                          Exclusive amenities: Burj Al Arab offers a range of
-                          exclusive amenities, including a private beach, an
-                          outdoor pool, and a spa.
-                        </span>
-                      </div>
-                    </li>
-                    <li>
-                      <div className="flex gap-4">
-                        <div className="w-6 h-6 grid place-content-center rounded-full shrink-0 bg-[var(--primary-light)]">
-                          <i className="las la-check text-lg text-primary"></i>
-                        </div>
-                        <span className="inline-block">
-                          Incredible views: The hotel is located on a man-made
-                          island, which offers incredible views of the Dubai
-                          skyline and the Arabian Gulf.
-                        </span>
-                      </div>
-                    </li>
-                  </ul>
-                  <Link
-                    href="#"
-                    className="link flex items-center gap-2 text-primary">
+                  <span
+                    // href="#"
+                    className="link flex items-center gap-2 text-primary"
+                  >
                     <span className="font-semibold inline-block">
                       Read More
                     </span>
                     <ArrowLongRightIcon className="w-5 h-5" />
-                  </Link>
+                  </span>
+                </div>
+                <div className="p-3 sm:p-4 lg:p-6 bg-white rounded-2xl mb-10">
+                  <h4 className="mb-5 text-2xl font-semibold"> Excludes </h4>
+                  <ul className="flex flex-col gap-4 mb-5">
+                    {data.EXCLUSION.map((excludes, index) => {
+                      return (
+                        <li key={index}>
+                          <div className="flex gap-4">
+                            <div className="w-6 h-6 grid place-content-center rounded-full shrink-0 bg-[var(--primary-light)]">
+                              <i className="las la-check text-lg text-primary"></i>
+                            </div>
+                            <span className="inline-block">{excludes}</span>
+                          </div>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                  <span
+                    // href="#"
+                    className="link flex items-center gap-2 text-primary"
+                  >
+                    <span className="font-semibold inline-block">
+                      Read More
+                    </span>
+                    <ArrowLongRightIcon className="w-5 h-5" />
+                  </span>
                 </div>
 
                 <div className="p-3 sm:p-4 lg:p-6 bg-white rounded-2xl mb-10">
                   <h4 className="mb-5 text-2xl font-semibold">
                     {" "}
-                    Featured Room{" "}
+                    Cancellation policy{" "}
                   </h4>
-                  <ul className="flex flex-col gap-4">
-                    {data.map((item) => (
-                      <HotelDetailsFeaturedRoom key={item.id} item={item} />
-                    ))}
-                  </ul>
-                </div>
-                <div className="p-3 sm:p-4 lg:p-6 bg-white rounded-2xl mb-10">
-                  <h4 className="mb-5 text-2xl font-semibold">
-                    {" "}
-                    Hotel Policies{" "}
-                  </h4>
-                  <ul className="flex flex-col gap-4 mb-5">
-                    <li>
-                      <div className="flex gap-4">
-                        <div className="w-6 h-6 grid place-content-center rounded-full shrink-0 bg-[var(--primary-light)]">
-                          <i className="las la-check text-lg text-primary"></i>
-                        </div>
-                        <span className="inline-block">
-                          Check-in and check-out: Check-in time is 3:00 PM, and
-                          check-out time is 12:00 PM
-                        </span>
-                      </div>
-                    </li>
-                    <li>
-                      <div className="flex gap-4">
-                        <div className="w-6 h-6 grid place-content-center rounded-full shrink-0 bg-[var(--primary-light)]">
-                          <i className="las la-check text-lg text-primary"></i>
-                        </div>
-                        <span className="inline-block">
-                          Children policy: Children of all ages are welcome at
-                          Hotel. The hotel offers a range of amenities and
-                          activities for children, including a kids club and
-                          babysitting services.
-                        </span>
-                      </div>
-                    </li>
-                    <li>
-                      <div className="flex gap-4">
-                        <div className="w-6 h-6 grid place-content-center rounded-full shrink-0 bg-[var(--primary-light)]">
-                          <i className="las la-check text-lg text-primary"></i>
-                        </div>
-                        <span className="inline-block">
-                          Smoking policy: Our Hotel is a non-smoking hotel.
-                          Smoking is prohibited in all rooms and public areas.
-                          Violators may be subject to a cleaning fee.
-                        </span>
-                      </div>
-                    </li>
-                    <li>
-                      <div className="flex gap-4">
-                        <div className="w-6 h-6 grid place-content-center rounded-full shrink-0 bg-[var(--primary-light)]">
-                          <i className="las la-check text-lg text-primary"></i>
-                        </div>
-                        <span className="inline-block">
-                          Pet policy: Pets are not allowed at Hotel,with the
-                          exception of guide dogs.
-                        </span>
-                      </div>
-                    </li>
-                  </ul>
-                  <Link
-                    href="#"
-                    className="link flex items-center gap-2 text-primary">
+                  <p className="mb-5 clr-neutral-500">
+                    {data.CANCELLATION_POLICY}
+                  </p>
+                  <span
+                    // href="#"
+                    className="link flex items-center gap-2 text-primary"
+                  >
                     <span className="font-semibold inline-block">
                       Read More
                     </span>
                     <ArrowLongRightIcon className="w-5 h-5" />
-                  </Link>
+                  </span>
                 </div>
-
-                
-
-              
-
-                
+                <div className="p-3 sm:p-4 lg:p-6 bg-white rounded-2xl mb-10">
+                  <h4 className="mb-5 text-2xl font-semibold">Refund policy</h4>
+                  <p className="mb-5 clr-neutral-500">{data.REFUND_POLICY}</p>
+                  <span
+                    // href="#"
+                    className="link flex items-center gap-2 text-primary"
+                  >
+                    <span className="font-semibold inline-block">
+                      Read More
+                    </span>
+                    <ArrowLongRightIcon className="w-5 h-5" />
+                  </span>
+                </div>
               </div>
             </div>
 
             <div className="col-span-12 xl:col-span-4">
-              
               <div className="bg-white rounded-2xl py-8 px-6">
                 <div className="w-32 h-32 border border-[var(--primary)] rounded-full bg-white p-4 grid place-content-center relative mx-auto mb-10">
                   <Image
@@ -711,8 +501,7 @@ export default function Page({ params }: { params: { id: string } }) {
                   </div>
                 </div>
                 <h4 className="text-center text-2xl font-semibold mb-4">
-                  {" "}
-                  Savannah Nguyen{" "}
+                  Savannah Nguyen
                 </h4>
                 <ul className="flex items-center gap-3 justify-center flex-wrap mb-7">
                   <li>
@@ -736,35 +525,40 @@ export default function Page({ params }: { params: { id: string } }) {
                   <li>
                     <Link
                       href="#"
-                      className="link grid place-content-center duration-300 w-9 h-9 rounded-full bg-[var(--primary-light)] text-primary hover:bg-primary hover:text-white">
+                      className="link grid place-content-center duration-300 w-9 h-9 rounded-full bg-[var(--primary-light)] text-primary hover:bg-primary hover:text-white"
+                    >
                       <i className="lab la-facebook-f text-xl"></i>
                     </Link>
                   </li>
                   <li>
                     <Link
                       href="#"
-                      className="link grid place-content-center duration-300 w-9 h-9 rounded-full bg-[var(--primary-light)] text-primary hover:bg-primary hover:text-white">
+                      className="link grid place-content-center duration-300 w-9 h-9 rounded-full bg-[var(--primary-light)] text-primary hover:bg-primary hover:text-white"
+                    >
                       <i className="lab la-twitter text-xl"></i>
                     </Link>
                   </li>
                   <li>
                     <Link
                       href="#"
-                      className="link grid place-content-center duration-300 w-9 h-9 rounded-full bg-[var(--primary-light)] text-primary hover:bg-primary hover:text-white">
+                      className="link grid place-content-center duration-300 w-9 h-9 rounded-full bg-[var(--primary-light)] text-primary hover:bg-primary hover:text-white"
+                    >
                       <i className="lab la-instagram text-xl"></i>
                     </Link>
                   </li>
                   <li>
                     <Link
                       href="#"
-                      className="link grid place-content-center duration-300 w-9 h-9 rounded-full bg-[var(--primary-light)] text-primary hover:bg-primary hover:text-white">
+                      className="link grid place-content-center duration-300 w-9 h-9 rounded-full bg-[var(--primary-light)] text-primary hover:bg-primary hover:text-white"
+                    >
                       <i className="lab la-linkedin-in text-xl"></i>
                     </Link>
                   </li>
                   <li>
                     <Link
                       href="#"
-                      className="link grid place-content-center duration-300 w-9 h-9 rounded-full bg-[var(--primary-light)] text-primary hover:bg-primary hover:text-white">
+                      className="link grid place-content-center duration-300 w-9 h-9 rounded-full bg-[var(--primary-light)] text-primary hover:bg-primary hover:text-white"
+                    >
                       <i className="lab la-dribbble text-xl"></i>
                     </Link>
                   </li>
@@ -802,5 +596,4 @@ export default function Page({ params }: { params: { id: string } }) {
       </div>
     </main>
   );
-};
-
+}

@@ -9,7 +9,7 @@ export const menus = [
   
   {
     title: "Tours",
-    url: "/tours?page=1&limit=6",
+    url: "/tours",
   },
   {
     title: "About Us",

@@ -93,7 +93,7 @@ const Page = () => {
                       <td className="py-3 lg:py-4 px-2">{time}</td>
                       <td className={`py-3 lg:py-4 px-2`}>
                         <div className={`w-32`}>
-                          <HeadlessList initialValue={status} />
+                  
                         </div>
                       </td>
                       <td className="py-3 lg:py-4 px-2 ">

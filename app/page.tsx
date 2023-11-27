@@ -35,6 +35,7 @@ export default function Home({}) {
       <MobileMenu />
       <Hero />
 
+      <Category />
       <WhyChoose />
       <Featured />
     

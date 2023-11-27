@@ -15,6 +15,7 @@ import { candlestick } from "@/public/data/candlestick";
 import React, { useState, useEffect } from 'react';
 import { useSession } from "next-auth/react"
 import PaginationControls from '@/components/PaginationControls'
+import {url} from "@/utils/index";
 
 const ApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
@@ -74,7 +75,7 @@ const PackageCard: React.FC<{ packageInfo: BookingData }> = ({ packageInfo }) =>
 
 async function fetchBookingData(userId: string): Promise<BookingData[] > {
   try {
-    const response = await fetch(`https://blesstours.onrender.com/api/v1/booking/vendor/bookings/${userId}`);
+    const response = await fetch(`${url}/api/v1/booking/vendor/bookings/${userId}`);
     if (!response.ok) {
       const errorData: ErrorResponse = await response.json();
       throw new Error(errorData.message);
@@ -88,7 +89,7 @@ async function fetchBookingData(userId: string): Promise<BookingData[] > {
   }
 }
 
-
+ 
 export default function Page( {
   searchParams,
 }: {
@@ -223,12 +224,12 @@ export default function Page( {
               )}
             </tbody>
           </table>
-          <PaginationControls
+          {/* <PaginationControls
             hasNextPage={end < packages.length}
             hasPrevPage={start > 0}
             dataLength={packages.length}
             url="/vendor/bookings/"
-          />
+          /> */}
          
         </div>
       </div>

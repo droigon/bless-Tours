@@ -1,27 +1,29 @@
 "use client";
 import Accordion from "@/components/Accordion";
-import CheckboxCustom from "@/components/Checkbox";
 import { ChevronDownIcon, PencilIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
-import { useSession } from "next-auth/react"
+import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { ChangeEvent, useRef, useState, useEffect } from "react";
-import { PhoneInput } from 'react-international-phone';
-import 'react-international-phone/style.css';
+import { ChangeEvent, useRef, useState } from "react";
+import { PhoneInput } from "react-international-phone";
+import "react-international-phone/style.css";
+import {url} from "@/utils/index";
 
 interface UserData {
   id: string;
-  FIRSTNAME:string;
-  LASTNAME:string;
-  PHONE_NUMBER:string;
-  EMAIL:string;
-  PROFILE_PICTURE:string;
-  isVerified:boolean;
+  FIRSTNAME: string;
+  LASTNAME: string;
+  PHONE_NUMBER: string;
+  EMAIL: string;
+  PROFILE_PICTURE: string;
+  isVerified: boolean;
   // Add other properties based on your API response
 }
 
 interface ApiResponse {
   data: UserData;
+  statusCode: number;
+  message?: string;
 }
 
 interface ErrorResponse {
@@ -29,35 +31,19 @@ interface ErrorResponse {
 }
 
 async function fetchUserData(userId: string): Promise<UserData | null> {
-  try {
-    const response = await fetch(`https://blesstours.onrender.com/api/v1/users/${userId}`);
-    if (!response.ok) {
-      const errorData: ErrorResponse = await response.json();
-      throw new Error(errorData.message);
-    }
+  const response = await fetch(
+    `${url}/api/v1/users/${userId}`
+  );
+  const data: ApiResponse = await response.json();
 
-    const data: ApiResponse = await response.json();
-    return data.data;
-  } catch (error) {
-    console.error('Error fetching user data:', error);
-    return null;
-  }
+  return data.data;
 }
 
-
-
-const Page = () => {
+const Page = async () => {
   const inputFileRef = useRef<HTMLInputElement>(null);
   const [imageSrc, setImageSrc] = useState<string>("/img/team-1.jpg");
-
-  const { data } = useSession();
   const { data: session } = useSession();
-  const [userData, setUserData] = useState<UserData | null>(null);
-
-
-  const [phone, setPhone] = useState('');
-
-  const [isVerified, setisVerified] = useState(true);
+  const [phone, setPhone] = useState("");
 
   const handleImageClick = () => {
     if (inputFileRef.current) {
@@ -78,26 +64,8 @@ const Page = () => {
     }
   };
 
-  useEffect(() => {
-    
-    if (session) {
-      const userId = session.user?.id || "";
+  const userData: UserData | null = await fetchUserData(session?.user?.id!);
 
-      fetchUserData(userId)
-        .then((userData) => {
-          if (userData) {
-            setUserData(userData);
-            setisVerified(userData.isVerified);
-            setImageSrc(userData.PROFILE_PICTURE);
-          }
-        })
-        .catch((error) => {
-          console.error('Error fetching user data:', error);
-        });
-    }
-  }, [session]);
-  
-  
   return (
     <>
       <div className="bg-white p-4 sm:p-6 md:p-8 mb-6 rounded-2xl shadow-lg">
@@ -112,7 +80,8 @@ const Page = () => {
               />
             </div>
           )}
-          initialOpen={true}>
+          initialOpen={true}
+        >
           <div className="pt-4 lg:pt-6">
             <div>
               <div className="relative mx-auto ms-md-0 mb-6">
@@ -127,7 +96,8 @@ const Page = () => {
                   />
                   <label
                     htmlFor="imageUpload"
-                    className="avatar-upload__label"></label>
+                    className="avatar-upload__label"
+                  ></label>
                 </div>
                 <div className="relative w-[180px] h-[180px]">
                   <Image
@@ -135,7 +105,7 @@ const Page = () => {
                     width={180}
                     height={180}
                     className="rounded-full border-[6px] border-[#F5F5FE] shadow-md"
-                    src={imageSrc}
+                    src={userData?.PROFILE_PICTURE || imageSrc}
                     alt="avatar"
                   />
                   <span className="w-8 h-8 absolute cursor-pointer text-primary top-4 right-4 hover:bg-primary duration-300 hover:text-white rounded-full bg-white flex justify-center items-center border border-primary">
@@ -147,13 +117,16 @@ const Page = () => {
                 <div className="col-span-12 lg:col-span-6">
                   <label
                     htmlFor="full-name"
-                    className="block mb-2 font-medium clr-neutral-500">
+                    className="block mb-2 font-medium clr-neutral-500"
+                  >
                     Full name :
                   </label>
                   <input
                     type="text"
                     id="full-name"
-                    defaultValue={userData?.LASTNAME + ' ' + userData?.FIRSTNAME}
+                    defaultValue={
+                      userData?.LASTNAME + " " + userData?.FIRSTNAME
+                    }
                     className="border w-full focus:outline-none py-3 px-6 rounded-2xl"
                     placeholder="Enter name"
                   />
@@ -161,7 +134,8 @@ const Page = () => {
                 <div className="col-span-12 lg:col-span-6">
                   <label
                     htmlFor="user-email"
-                    className="block mb-2 font-medium clr-neutral-500">
+                    className="block mb-2 font-medium clr-neutral-500"
+                  >
                     Email :
                   </label>
                   <input
@@ -172,23 +146,22 @@ const Page = () => {
                     placeholder="Enter email"
                   />
                 </div>
-                
-                
+
                 <div className="col-span-12 lg:col-span-12">
                   <label
                     htmlFor="user-phone"
-                    className="block mb-2 font-medium clr-neutral-500">
+                    className="block mb-2 font-medium clr-neutral-500"
+                  >
                     Phone (Optional) :
                   </label>
                   <PhoneInput
                     defaultCountry="ua"
-                    value={(userData?.PHONE_NUMBER)?.toString()} 
+                    value={userData?.PHONE_NUMBER?.toString()}
                     //defaultMask="111"
                     inputClassName=" border w-full h-[200] focus:outline-none mx-16 py-16 px-32 m -32 rounded-3xl"
-                    onChange={(phone) => setPhone(phone)} />
-               
+                    onChange={(phone) => setPhone(phone)}
+                  />
                 </div>
-                
 
                 <div className="col-span-12 lg:col-span-12">
                   <label className="block mb-2 font-medium clr-neutral-500">
@@ -205,7 +178,8 @@ const Page = () => {
                         />
                         <label
                           className="inline-block font-medium cursor-pointer clr-neutral-500"
-                          htmlFor="male">
+                          htmlFor="male"
+                        >
                           Male
                         </label>
                       </div>
@@ -220,7 +194,8 @@ const Page = () => {
                         />
                         <label
                           className="inline-block font-medium cursor-pointer clr-neutral-500"
-                          htmlFor="female">
+                          htmlFor="female"
+                        >
                           Female
                         </label>
                       </div>
@@ -234,20 +209,22 @@ const Page = () => {
                   <textarea
                     rows={4}
                     placeholder="Write your bio"
-                    className="border w-full focus:outline-none py-3 px-6 rounded-2xl"></textarea>
+                    className="border w-full focus:outline-none py-3 px-6 rounded-2xl"
+                  ></textarea>
                 </div>
-                
 
                 <div className="col-span-12">
                   <div className="flex items-center gap-6 flex-wrap">
                     <Link
                       href="#"
-                      className="link inline-block py-3 px-6 rounded-full bg-primary text-white :bg-primary-400 hover:text-white font-semibold">
+                      className="link inline-block py-3 px-6 rounded-full bg-primary text-white :bg-primary-400 hover:text-white font-semibold"
+                    >
                       Save Changes
                     </Link>
                     <Link
                       href="#"
-                      className="btn-outline text-primary font-semibold">
+                      className="btn-outline text-primary font-semibold"
+                    >
                       Cancel
                     </Link>
                   </div>
@@ -269,7 +246,8 @@ const Page = () => {
               />
             </div>
           )}
-          initialOpen={true}>
+          initialOpen={true}
+        >
           <div className="pt-4 lg:pt-6">
             <form action="#" className="grid grid-cols-12 gap-4">
               <div className="col-span-12 ">
@@ -279,7 +257,8 @@ const Page = () => {
                 <div className="border rounded-lg px-4 bg-transparent">
                   <select
                     className="w-full bg-transparent px-5 py-3 focus:outline-none"
-                    aria-label="Default select example">
+                    aria-label="Default select example"
+                  >
                     <option>Property Types</option>
                     <option value="1">New York</option>
                     <option value="2">Chicago</option>
@@ -290,7 +269,8 @@ const Page = () => {
               <div className="col-span-12 lg:col-span-6">
                 <label
                   id="address-line-1"
-                  className="block mb-2 font-medium clr-neutral-500">
+                  className="block mb-2 font-medium clr-neutral-500"
+                >
                   Address line 1 :
                 </label>
                 <input
@@ -303,7 +283,8 @@ const Page = () => {
               <div className="col-span-12 lg:col-span-6">
                 <label
                   id="address-line-2"
-                  className="block mb-2 font-medium clr-neutral-500">
+                  className="block mb-2 font-medium clr-neutral-500"
+                >
                   Address line 2:
                 </label>
                 <input
@@ -316,7 +297,8 @@ const Page = () => {
               <div className="col-span-12">
                 <label
                   id="enter-code"
-                  className="block mb-2 font-medium clr-neutral-500">
+                  className="block mb-2 font-medium clr-neutral-500"
+                >
                   Zip code :
                 </label>
                 <input
@@ -330,12 +312,14 @@ const Page = () => {
                 <div className="flex items-center gap-6 flex-wrap">
                   <Link
                     href="#"
-                    className="link inline-block py-3 px-6 rounded-full bg-primary text-white :bg-primary-400 hover:text-white font-semibold">
+                    className="link inline-block py-3 px-6 rounded-full bg-primary text-white :bg-primary-400 hover:text-white font-semibold"
+                  >
                     Save Changes
                   </Link>
                   <Link
                     href="#"
-                    className="btn-outline text-primary font-semibold">
+                    className="btn-outline text-primary font-semibold"
+                  >
                     Cancel
                   </Link>
                 </div>
@@ -344,8 +328,6 @@ const Page = () => {
           </div>
         </Accordion>
       </div>
-      
-      
     </>
   );
 };

@@ -6,6 +6,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import { Navigation } from "swiper";
 import SubHeadingBtn from "../SubHeadingBtn";
+import categoryEl from "@/public/img/category-section-el.png";
 const images = [
   "/img/memory-slider-img-3.png",
   "/img/memory-slider-img-2.png",
@@ -15,6 +16,7 @@ const images = [
 const TravelMemory = () => {
   return (
     <div className="bg-white py-[60px] lg:py-[120px] px-3">
+      
       <div className="container">
         <div className="grid grid-cols-12 gap-6">
           <div className="col-span-12 lg:col-span-6 grid grid-cols-12">

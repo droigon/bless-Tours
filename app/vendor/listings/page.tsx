@@ -4,16 +4,13 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
 } from "@heroicons/react/24/outline";
-import { featuredHotels } from "@/public/data/featuredhotel";
-import { Tooltip } from "react-tooltip";
 import VendorListingList from "@/components/vendor-dashboard/VendorListingList";
-import Link from "next/link";
 import Footer from "@/components/vendor-dashboard/Vendor.Footer";
 import CounterElement from "@/components/CounterElement";
 import dynamic from "next/dynamic";
-import React, { useState, useEffect } from 'react';
-import { useSession } from "next-auth/react"
-import DeleteModal from '@/components/DeleteModal';
+import { useSession } from "next-auth/react";
+import DeleteModal from "@/components/DeleteModal";
+import {url} from "@/utils/index";
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 import { ApexOptions } from "apexcharts";
@@ -59,9 +56,6 @@ var series = [
   },
 ];
 
-
-
-
 interface PackageInfo {
   _id: string;
   NAME: string;
@@ -73,68 +67,37 @@ interface PackageInfo {
 
 interface ApiResponse {
   data: PackageInfo[];
-}
+} 
 
-const fetchFeaturedPackages = async (tokens: string): Promise<PackageInfo[]> => {
-  const response = await fetch(`https://blesstours.onrender.com/api/v1/tours/vendor/${tokens}`);
-  const responseData: ApiResponse = await response.json();
-  return responseData.data || [];
-};
-
-const PackageCard: React.FC<{ packageInfo: PackageInfo }> = ({ packageInfo }) => {
-  const { _id, NAME, DURATION,  AMOUNT,GUESTS } = packageInfo;
-
-  return (
-    <>
-    
-      <VendorListingList key={_id} item={packageInfo} />
-  
-    </>
+const fetchFeaturedPackages = async (id: string): Promise<PackageInfo[]> => {
+  const response = await fetch(
+    `${url}/api/v1/tours/vendor/${id!}`
   );
+  const res = await response.json();
+  return res.data;
 };
 
+const PackageCard: React.FC<{ packageInfo: PackageInfo }> = ({
+  packageInfo,
+}) => {
+  const { _id, NAME, DURATION, AMOUNT, GUESTS } = packageInfo;
 
+  return <VendorListingList key={_id} item={packageInfo} />;
+};
 
+const Page: React.FC = async () => {
+  //const page = () => {
 
-
-
-const Page: React.FC = () => {
-  
-//const page = () => {
-  
   const tooltipStyle = {
     backgroundColor: "#3539E9",
     color: "#fff",
     borderRadius: "10px",
   };
 
-
-  const [packages, setPackages] = useState<PackageInfo[]>([]);
-  const [isLoading, setLoading] = useState<boolean>(true);
   const { data: session } = useSession();
-  
-    useEffect(() => {
-      if (session ) {
-        const userId = session.user?.id || "";
-        //const tokenz = session.user?.token || "";
-  
-        //console.log('data', userId)
-        const fetchPackages = async (): Promise<void> => {
-          try {
-            const data = await fetchFeaturedPackages(userId);
-            setPackages(data);
-            setLoading(false);
-          } catch (error) {
-            console.error('Error fetching packages:', error);
-            setLoading(false);
-          }
-        };
-    
-        fetchPackages();
-      }
-      
-    }, [session]);
+  const id = session?.user.id;
 
+  const packages = await fetchFeaturedPackages(id!);
 
   return (
     <div className="relative bg-[var(--bg-1)] after:absolute after:w-full after:h-[60px] after:bg-[var(--dark)] after:top-0 after:left-0">
@@ -221,7 +184,7 @@ const Page: React.FC = () => {
         <div className="bg-white border rounded-2xl p-4 lg:py-8 lg:px-10">
           <div className="flex justify-between flex-wrap gap-2 items-center mb-6">
             <h3 className="h3">Listings Info</h3>
-            <div>
+            {/* <div>
               <span>Sort By:</span>
               <span className="p-3 border inline-block rounded-full ml-2">
                 <select className="focus:outline-none">
@@ -230,23 +193,17 @@ const Page: React.FC = () => {
                   <option value="3">Property</option>
                 </select>
               </span>
-            </div>
+            </div> */}
           </div>
-          <span>4 Items</span>
-          
           <div className="flex mt-4 flex-col gap-4 lg:gap-6">
-            
-
-          {isLoading ? (
-            <p>Loading...</p>
-          ) : (
-            packages.map((packageInfo) => <PackageCard key={packageInfo._id} packageInfo={packageInfo} />)
-          )}
-            
-            
-
-            
-            <div className="flex justify-between flex-wrap items-center gap-3 py-5">
+            {!packages ? (
+              <p>No tours exists for this vendor</p>
+            ) : (
+              packages.map((packageInfo) => (
+                <PackageCard key={packageInfo._id} packageInfo={packageInfo} />
+              ))
+            )}
+            {/* <div className="flex justify-between flex-wrap items-center gap-3 py-5">
               <span>Showing 1 to 7 of 20 entries</span>
               <ul className="flex gap-2">
                 <li className="border border-primary w-10 h-10 rounded-full flex items-center justify-center text-primary hover:bg-primary hover:text-white duration-300">
@@ -272,12 +229,8 @@ const Page: React.FC = () => {
                   </Link>
                 </li>
               </ul>
-            </div>
-          
-          
+            </div> */}
           </div>
-
-          
         </div>
       </div>
       <Footer />

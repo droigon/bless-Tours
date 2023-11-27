@@ -18,12 +18,14 @@ const Category = () => {
           <SubHeadingBtn text="Category" classes="bg-[var(--primary-light)]" />
           <h2 className="h2 mt-3">Choose Our Category</h2>
           <p className="text-neutral-600 pt-5 pb-8 lg:pb-14">
-            Real estate can be bought, sold, leased, or rented, and can be a
-            valuable investment opportunity. The value of real estate can be...
+          Tours offer unique experiences, adventure, and cultural enrichment.
+           Like valuable investments, they can be explored, booked, and shared, providing lasting memories and personal 
+           growth opportunities.
+           
           </p>
         </div>
         <div className="flex flex-wrap justify-center gap-6">
-          {categoryData.map(({ id, desc, icon, title, color }) => (
+          {categoryData.map(({ id, desc, icon, link, title, color }) => (
             <div
               key={id}
               className="border rounded-xl max-w-[306px] cursor-pointer group duration-300">
@@ -40,8 +42,8 @@ const Category = () => {
                 <p>{desc}</p>
               </div>
               <div className="bg-[var(--bg-1)] p-8 rounded-b-xl group-hover:bg-[#212391] group-hover:text-white duration-300">
-                <Link href="#">
-                  Read More <i className="las la-arrow-right"></i>
+                <Link href={link}>
+                  Explore <i className="las la-arrow-right"></i>
                 </Link>
               </div>
             </div>
@@ -51,7 +53,7 @@ const Category = () => {
               <div className="text-center">
                 <h2 className="h2 mb-2">25+</h2>
                 <p>
-                  Explore Properties and <br /> Invest with Confidence
+                  Explore other Tours and <br /> Book with Confidence
                 </p>
                 <Link
                   href="#"

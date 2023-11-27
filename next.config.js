@@ -6,7 +6,7 @@ const nextConfig = {
       appDir: true,
     },
     images:{
-      domains: ['res.cloudinary.com','utfs.io'],
+      domains: ['res.cloudinary.com','utfs.io','https://utfs.io',"https://jon.cloudinary.com"],
     }
   };
   

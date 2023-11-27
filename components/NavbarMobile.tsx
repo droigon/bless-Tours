@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { menus } from "@/public/data/menu";
+import { menus } from "@/public/data/menu"; 
 import AnimateHeight from "react-animate-height";
 
 interface MenuItem {

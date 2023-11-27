@@ -1,8 +1,9 @@
 import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import NextAuth from "next-auth/next";
+import {url} from "@/utils/index";
 
-export const OPTIONS: any = { 
+export const OPTIONS: any = {
   providers: [
     // GitHubProvider({
     //   clientId: process.env.GITHUB_ID as string,
@@ -55,29 +56,28 @@ export const OPTIONS: any = {
         // e.g. return { id: 1, name: 'J Smith', email: 'jsmith@example.com' }
         // You can also use the `req` object to obtain additional parameters
         // (i.e., the request IP address)
-        console.log("credentials", credentials);
-        const { role, email, password } = credentials;
-        const roleParam = role !== "null" ? `${role}` : "users";
-        //const api = `http://0.0.0.0.:3000/api/v1/${roleParam}/signin`;
-        const api = `https://blesstours.onrender.com/api/v1/${roleParam}/signin`;
+        try {
+          const { role, email, password } = credentials;
+          const roleParam = role !== "null" ? `${role}` : "users";
+          const api = `${url}/api/v1/${roleParam}/signin`;
 
-        const res = await fetch(api, {
-          method: "POST",
-          body: JSON.stringify({ email, password }),
-          headers: { "Content-Type": "application/json" },
-        });
-        const user = await res.json();
-        console.log("user", user);
+          const res = await fetch(api, {
+            method: "POST",
+            body: JSON.stringify({ email, password }),
+            headers: { "Content-Type": "application/json" },
+          });
+          const user = await res.json();
 
-        // If no error and we have user data, return it
-        if (res.ok && user) {
-          return user.data;
+          // If no error and we have user data, return it
+          if (user.statusCode === 200) {
+            return user.data;
+          } else {
+            throw new Error(user?.message);
+          }
+        } catch (error: any) {
+          console.log("error:", error.message);
+          throw new Error(`An error occured:${error.message}`);
         }
-        return new Error('Invalid email or password');
-        //else return null;
-        // Return null if user data could not be retrieved
-        
-
       },
     }),
   ],
@@ -112,8 +112,6 @@ export const OPTIONS: any = {
 
       return token;
     },
-
-    
 
     // If you want to use the role in client components
     async session({ session, token }: any) {

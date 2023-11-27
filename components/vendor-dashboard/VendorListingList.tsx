@@ -7,57 +7,53 @@ import {
 } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
-import DeleteModal from '@/components/DeleteModal';
-import React, { useState, useEffect } from 'react';
-import { useSession } from "next-auth/react"
+import DeleteModal from "@/components/DeleteModal";
+import React, { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
+import { toast } from "react-toastify";
+import {url} from "@/utils/index";
 
 const VendorListingList = ({ item }: any) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [favorite, setFavorite] = useState(false);
-  const [token, setToken] = useState("");
-  const { _id,NAME, LOCATION,DESCRIPTION,img, AMOUNT, rating, name } = item;
-  const { data: session } = useSession();
-  
+  const {
+    _id,
+    NAME,
+    LOCATION,
+    DESCRIPTION,
+    AMOUNT,
 
-  const handleDelete = async (itemId:string) => {
-    console.log(itemId)
+    IMAGES,
+  } = item;
+  const { data: session } = useSession();
+
+  const handleDelete = async (itemId: string) => {
+    console.log(itemId);
     try {
-      const response = await fetch(`https://blesstours.onrender.com/api/v1/tours/delete/${itemId}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          "x-vendor-token": `${token}`, 
-          // Add any additional headers if needed
-        },
-      });
-  
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
+      const response = await fetch(
+        `${url}/api/v1/tours/delete/${itemId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            "x-vendor-token": session!.user?.token!,
+            // Add any additional headers if needed
+          },
+        }
+      );
+      const res = await response.json();
+      if (res.statusCode == 200) {
+        toast.success("Item deleted successfully");
+      } else {
+        throw new Error(res.message);
       }
-  
-      const data = await response.json();
-      console.log('Item deleted successfully', data);
-      alert("Item deleted successfully");
-      setIsModalOpen(false); 
-    } catch (error) {
-      console.error('Error deleting item:', error);
+    } catch (error: any) {
+      toast.error("Error deleting tour:", error.message);
+    } finally {
+      setIsModalOpen(false);
     }
   };
 
-
-  
-
-
-  useEffect(() => {
-    if (session ) {
-      //const userId = session.user?.id || "";
-      const token = session.user?.token || "";
-      setToken(token);
-      //console.log('data', userId)
-    }
-    
-  }, [session]);
-  
   return (
     <div key={_id} className="col-span-12">
       <div className="flex flex-col md:flex-row p-2 rounded-2xl bg-white hover:shadow-lg duration-300 border">
@@ -66,14 +62,15 @@ const VendorListingList = ({ item }: any) => {
             <Image
               width={369}
               height={282}
-              src="/img/featured-hotel-1.jpg"
-              alt="image"
+              src={IMAGES[0]}
+              alt="tour image"
               className=" w-full rounded-2xl"
             />
           </div>
           <button
             onClick={() => setFavorite(!favorite)}
-            className="absolute z-60 inline-block text-primary top-3 right-3 md:top-5 md:right-5 rounded-full bg-white p-2.5 ">
+            className="absolute z-60 inline-block text-primary top-3 right-3 md:top-5 md:right-5 rounded-full bg-white p-2.5 "
+          >
             {favorite ? (
               <HeartIcon className="w-5 h-5 text-[var(--tertiary)]" />
             ) : (
@@ -86,26 +83,23 @@ const VendorListingList = ({ item }: any) => {
             <div className="flex justify-between mb-2">
               <Link
                 href={`/vendor/listings/${_id}`}
-                className="link block flex-grow text-[var(--neutral-700)] hover:text-primary text-xl font-medium">
+                className="link block flex-grow text-[var(--neutral-700)] hover:text-primary text-xl font-medium"
+              >
                 {NAME}
               </Link>
               <div className="flex items-center shrink-0">
-              <div className="flex items-center gap-1">
-                <MapPinIcon className="w-5 h-5 text-[#9C742B]" />
-                <span className="inline-block"> {LOCATION} </span>
-              </div>
+                <div className="flex items-center gap-1">
+                  <MapPinIcon className="w-5 h-5 text-[#9C742B]" />
+                  <span className="inline-block"> {LOCATION} </span>
+                </div>
               </div>
             </div>
             <div className="flex justify-between mb-6">
               <div className="flex items-center gap-1">
-                 
                 <span className="inline-block"> {DESCRIPTION} </span>
               </div>
-              <span className="inline-block font-medium clr-secondary-400">
-               
-              </span>
+              <span className="inline-block font-medium clr-secondary-400"></span>
             </div>
-             
           </div>
           <div className="my-5 xl:my-7">
             <div className="border border-dashed"></div>
@@ -118,16 +112,24 @@ const VendorListingList = ({ item }: any) => {
               </span>
             </span>
             <div className="flex flex-wrap gap-3">
-              <Link href={`/vendor/listings/edit/${_id}`}
-              className="btn-outline">
-              <PaintBrushIcon className="w-5 h-5" />
+              <Link
+                href={`/vendor/listings/edit/${_id}`}
+                className="btn-outline"
+              >
+                <PaintBrushIcon className="w-5 h-5" />
                 Edit
               </Link>
-              
-              <DeleteModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onDelete={handleDelete} itemId={_id} />
-              <button  
-               onClick={() => setIsModalOpen(true)}
-               className="btn-outline">
+
+              <DeleteModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                onDelete={handleDelete}
+                itemId={_id}
+              />
+              <button
+                onClick={() => setIsModalOpen(true)}
+                className="btn-outline"
+              >
                 <TrashIcon className="w-5 h-5" />
                 Delete
               </button>
@@ -140,3 +142,4 @@ const VendorListingList = ({ item }: any) => {
 };
 
 export default VendorListingList;
+   

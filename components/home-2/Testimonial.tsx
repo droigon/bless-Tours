@@ -11,11 +11,32 @@ import testimonialImg from "@/public/img/testimonial-img.jpg";
 // import required modules
 import { Navigation } from "swiper";
 import { agents } from "@/public/data/agent";
+import testimonial1 from "@/public/img/testimonial-el-1.png";
+import testimonial2 from "@/public/img/testimonial-el-2.png";
+import testimonial3 from "@/public/img/testimonial-el-3.png";
+
+
 
 const Authors = () => {
   return (
     <section className="bg-white py-[60px] lg:py-[120px] px-3 xl:px-0 relative">
+       
       <div className="container">
+      <Image
+        src={testimonial1}
+        alt="image"
+        className="hidden lg:block absolute top-10 left-10"
+      />
+      <Image
+        src={testimonial2}
+        alt="image"
+        className="hidden lg:block absolute top-0 right-0"
+      />
+      <Image
+        src={testimonial3}
+        alt="image"
+        className="hidden lg:block absolute right-10 top-[60%]"
+      />
         <div className="flex justify-between gap-4 mb-8 flex-wrap">
           <div>
             <SubHeadingBtn
@@ -91,6 +112,7 @@ const Authors = () => {
             </SwiperSlide>
           ))}
         </Swiper>
+        
       </div>
     </section>
   );

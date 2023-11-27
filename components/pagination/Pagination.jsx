@@ -1,25 +1,32 @@
-"use client";
+const Pagination = ({ setPage, page, dataCount }) => {
+  const totalPages = Math.ceil(dataCount / 6);
+  const handleNext = () => {
+    if (page < totalPages) {
+      setPage(page + 1);
+    }
+  };
 
-import React from "react";
-import styles from "./pagination.module.css";
-import { useRouter } from "next/navigation";
-
-const Pagination = ({ page, hasPrev, hasNext }) => {
-  const router = useRouter();
+  const handlePrevious = () => {
+    if (page > 1) {
+      setPage(page - 1);
+    }
+  };
 
   return (
     <div className={styles.container}>
       <button
         className={styles.button}
-        disabled={!hasPrev}
-        onClick={() => router.push(`?page=${page - 1}`)}
+        disabled={page <= 1}
+        // onClick={() => router.push(`?page=${page - 1}`)}
+        onClick={handlePrevious}
       >
         Previous
       </button>
       <button
-        disabled={!hasNext}
+        disabled={page >= totalPages}
         className={styles.button}
-        onClick={() => router.push(`?page=${page + 1}`)}
+        // onClick={() => router.push(`?page=${page + 1}`)}
+        onClick={handleNext}
       >
         Next
       </button>

@@ -10,27 +10,27 @@ import { createUrl } from "@/src/utils/createUrl";
 import Button from "@/components/Button";
 import TextBox from "@/components/TextBox";
 
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 
 interface IProps {
   searchParams?: { [key: string]: string | string[] | undefined };
 }
 
 //const page = () => {
-  
+
 const LoginPage = ({ searchParams }: IProps) => {
   const [values, setValues] = useState({
     password: "",
     showPassword: false,
-});
+  });
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
   const urlsearchParams = useSearchParams();
   const optionSearchParams = new URLSearchParams(urlsearchParams?.toString());
-
-
+  const callbackUrl = optionSearchParams.get("callbackUrl");
   const [showPassword, setShowPassword] = useState(false);
-  const [password, setPassword] = useState('');
+  const [password, setPassword] = useState("");
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -40,30 +40,36 @@ const LoginPage = ({ searchParams }: IProps) => {
   const pass = useRef("");
   const role = optionSearchParams.get("role") || null;
 
-  
+  const onSubmit = async (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    try {
+      e.preventDefault();
+      setLoading(true);
 
-  const onSubmit = async () => {
-    console.log("email");
-    toast.info('Logging in...', {
-      position: "bottom-center",
-      autoClose: 7000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
+      const isRole =
+        role === "vendors" ? "/vendor/vendor-dashboard" : "/user/personal-info";
+
+      router.prefetch(isRole);
+      const result = await signIn("credentials", {
+        email: email.current,
+        password: pass.current,
+        role,
+        redirect: false,
+        callbackUrl: isRole,
       });
-
-    const result = await signIn("credentials", {
-      email: email.current,
-      password: pass.current,
-      redirect: true,
-      callbackUrl:
-        role == "vendors" ? "/vendor/vendor-dashboard" : "/user/personal-info",
-      role,
-    });
-    console.log("result", result);
+      console.log("login result", result);
+      console.log("callbackUrl", callbackUrl);
+      if (result?.error) {
+        throw new Error(result?.error);
+      } else {
+        router.push(callbackUrl || isRole);
+      }
+    } catch (error: any) {
+      toast.error(error.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -101,10 +107,8 @@ const LoginPage = ({ searchParams }: IProps) => {
                       className="w-full bg-[var(--bg-1)] border focus:outline-none rounded-full py-3 px-5"
                       placeholder="Enter Your Email"
                       id="enter-email"
-                      
                     />
                   </div>
-                  
 
                   <div className="col-span-12">
                     <label
@@ -160,13 +164,15 @@ const LoginPage = ({ searchParams }: IProps) => {
                     )}
                   </div>
                   <div className="col-span-12">
-                    <Link
-                      href="#"
+                    <button
+                      type="submit"
                       onClick={onSubmit}
                       className="link inline-flex items-center gap-2 py-3 px-6 rounded-full bg-primary text-white :bg-primary-400 hover:text-white font-semibold"
                     >
-                      <span className="inline-block"> Signin </span>
-                    </Link>
+                      <span className="inline-block">
+                        {loading ? "Signin..." : "Signin"}
+                      </span>
+                    </button>
                   </div>
                 </div>
               </form>

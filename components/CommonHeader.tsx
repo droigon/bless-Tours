@@ -5,10 +5,14 @@ import LangDropdown from "./LangDropdown";
 import NotificationDropdown from "./NotificationDropdown";
 import ProfileDropdown from "./ProfileDropdown";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 
 const CommonHeader = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const { data: session } = useSession();
+
+  console.log("session",session)
 
   useEffect(() => {
     document.addEventListener("scroll", () => {
@@ -28,9 +32,19 @@ const CommonHeader = () => {
     >
       <div className="container flex justify-between items-center relative px-3 py-2 lg:py-0 lg:px-0">
         <div className="lg:order-2 flex gap-2 items-center">
-          <Link href="/auth/login" className="btn-primary-lg hidden md:block">
-            Get Started
+        {session?.user.ROLE ===  "USER" ? (
+          <Link href="/user/personal-info" className="btn-primary-lg hidden md:block">
+            Dashboard
           </Link>
+            ):
+            session?.user.ROLE ===  "Vendor" ?
+            (<Link href="/vendor/vendor-dashboard" className="btn-primary-lg hidden md:block">
+            Dashboard
+          </Link>)
+            :(<Link href="/auth/login" className="btn-primary-lg hidden md:block">
+            Get Started
+          </Link>)
+        }
         </div>
         <div className="lg:order-1">
           <button

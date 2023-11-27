@@ -7,13 +7,15 @@ import cat6 from '@/public/img/cat-img-6.jpg'
 export const topcategories = [
     {
         id: 1, 
-        title: 'Beach', 
+        title: 'Holy Land', 
+        details: "Embark on a Sacred Pilgrimage to Ancient Sites, where History and Spirituality Unite in a Profound Journey of Discovery.", 
         places: 4.5,
         img: cat1, 
     },
     {
         id: 2, 
-        title: 'Mountain', 
+        title: 'Holy City', 
+        details: " Embark on a Spiritual Journey and Explore the Divine Beauty of Sacred Places, Enriching Your Soul Along the Way.",
         places: 4.5,
         img: cat2, 
     },
@@ -23,22 +25,5 @@ export const topcategories = [
         places: 4.5,
         img: cat3, 
     },
-    {
-        id: 4, 
-        title: 'Desert', 
-        places: 4.5,
-        img: cat4, 
-    },
-    {
-        id: 5, 
-        title: 'Tower', 
-        places: 4.5,
-        img: cat5, 
-    },
-    {
-        id: 6, 
-        title: 'Safari', 
-        places: 4.5,
-        img: cat6, 
-    },
+   
 ]
