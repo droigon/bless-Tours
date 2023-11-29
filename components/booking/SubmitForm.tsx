@@ -72,7 +72,6 @@ const SubmitForm = ({
         }
       );
       const res: any = await response.json();
-      console.log(res)
       if (res.statusCode == 201) {
         toast.success("Tour booked successfully");
         return res.data;

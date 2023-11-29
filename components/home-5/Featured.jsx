@@ -18,7 +18,6 @@ import {url} from "@/utils/index";
 const fetchFeaturedPackages = async () => {
   const response = await fetch(`${url}/api/v1/tours/?page=1&limit=9`);
   const data = await response.json();
-  console.log("get tours",data);
   return data.data || [];
 };
 
@@ -121,7 +120,6 @@ const Featured = () => {
         setPackages(data);
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching packages:', error);
         setLoading(false);
       }
     };

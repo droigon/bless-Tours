@@ -25,22 +25,43 @@ interface BookingData {
   checkoutDate: string;
 }
 
+//async function fetchBookingData(
+//  id: string,
+//  page: string
+//): Promise<BookingData[]> {
+//  const response = await fetch(
+//    `https://blesstours.onrender.com/api/v1/booking/vendor/${id}?page=${page}&limit=5`
+//  );
+//  const res = await response.json();
+//  return res.data;
+//}
+
 async function fetchBookingData(
   id: string,
   page: string
 ): Promise<BookingData[]> {
   const response = await fetch(
-    `https://blesstours.onrender.com/api/v1/booking/vendor/${id}?page=${page}&limit=5`
+    `${url}/api/v1/booking/vendor/${id}?page=${page}&limit=5`
   );
   const res = await response.json();
   return res.data;
 }
 
-export default async function Page() {
-  const { data: session } = useSession();
-  const id = session?.user?.id!;
 
-  const bookings = await fetchBookingData(id, "1");
+export default async function Page() {
+ 
+  const { data: session } = useSession();
+
+  const fetchBookings = async () => {
+    if (session && session.user && session.user.id) {
+      const id = session.user.id;
+      const bookings = await fetchBookingData(id, "1");
+      return bookings;
+    }
+    return null;
+  };
+
+  const bookings = await fetchBookings();
 
   // const entries = packages.slice(start, end);
   return (

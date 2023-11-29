@@ -23,8 +23,6 @@ import HeadlessList from "@/components/ListBox";
 import DeleteModal from '@/components/admin-dashboard/DeleteModal';
 import { getServerSession } from "next-auth";
 import { toast } from "react-toastify";
-import { useState, useEffect } from "react";
-import { useSession } from "next-auth/react"
 import {url} from "@/utils/index";
 
 async function getUser(id: string) {

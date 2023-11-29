@@ -17,7 +17,7 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import HeadlessList from "@/components/ListBox";
 import {url} from "@/utils/index";
-
+ 
 const BookListingList = ({ item }: any) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [favorite, setFavorite] = useState(false);
@@ -37,13 +37,12 @@ const BookListingList = ({ item }: any) => {
   const Router = useRouter();
 
   const handleDelete = async (userId: string) => {
-    console.log(userId);
     try {
-        const response = await fetch(`${url}/api/v1/users/delete/${userId}`, {
+        const response = await fetch(`https://blesstours.onrender.com/api/v1/users/delete/${userId}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
-          "x-admin-token":  session!.user?.token!, 
+          "x-admin-token":  session!.user?.token! as string, 
           // Add any additional headers if needed
         },
       });
@@ -75,7 +74,7 @@ const BookListingList = ({ item }: any) => {
           className="rounded-full"
           width={60}
           height={60}
-          src={userId.PROFILE_PICTURE ? (`${userId.PROFILE_PICTURE}`)
+          src={PROFILE_PICTURE ? (`${PROFILE_PICTURE}`)
           : (
             ('/img/user-1.jpg')
           )}

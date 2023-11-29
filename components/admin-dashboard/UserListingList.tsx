@@ -7,7 +7,7 @@ import {
     PencilSquareIcon,
     TrashIcon,
     EyeIcon
-  } from "@heroicons/react/24/outline";
+  } from "@heroicons/react/24/outline"; 
 import Image from "next/image";
 import Link from "next/link";
 import DeleteModal from '@/components/admin-dashboard/DeleteModal';

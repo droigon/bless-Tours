@@ -12,7 +12,6 @@ const CommonHeader = () => {
   const [scrolled, setScrolled] = useState(false);
   const { data: session } = useSession();
 
-  console.log("session",session)
 
   useEffect(() => {
     document.addEventListener("scroll", () => {

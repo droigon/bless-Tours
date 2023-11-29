@@ -58,7 +58,7 @@ async function fetchVendorData(userId: string): Promise<UserData | null> {
     const data: ApiResponse = await response.json();
     return data.data;
   } catch (error) {
-    console.error("Error fetching vendor data:", error);
+
     return null;
   }
 }
@@ -85,17 +85,14 @@ export default function RootLayout({
       const userId = session.user?.id || "";
       const tokenz = session.user?.token || "";
 
-      //console.log('data', userId)
-
       fetchVendorData(userId)
         .then((userData) => {
           if (userData) {
             setUserData(userData);
-            console.log(userData);
           }
         })
         .catch((error) => {
-          console.error("Error fetching user data:", error);
+          
         });
     }
   }, [session]);

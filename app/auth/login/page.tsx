@@ -58,8 +58,6 @@ const LoginPage = ({ searchParams }: IProps) => {
         redirect: false,
         callbackUrl: isRole,
       });
-      console.log("login result", result);
-      console.log("callbackUrl", callbackUrl);
       if (result?.error) {
         throw new Error(result?.error);
       } else {

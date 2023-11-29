@@ -48,7 +48,6 @@ const UpdateTour = ({ data, id }: { data: FormInputs; id: string }) => {
   const [loading, setLoading] = useState(false);
   const [tourDetails, setTourDetails] = useState<FormInputs>({});
 
-  console.log("tourDetails", tourDetails);
 
   const [tourPictures, setTourPictures] = useState<(File | string)[]>([""]);
 
@@ -63,7 +62,6 @@ const UpdateTour = ({ data, id }: { data: FormInputs; id: string }) => {
   ) => {
     const { name, value } = e.target;
     setTourDetails((prev) => ({ ...prev, [name]: value }));
-    console.log("name", name, "value", value);
   };
 
   const handleInclusionChange = (

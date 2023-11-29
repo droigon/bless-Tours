@@ -53,7 +53,7 @@ async function fetchUserData(userId: string): Promise<UserData | null> {
     const data: ApiResponse = await response.json();
     return data.data;
   } catch (error) {
-    console.error("Error fetching user data:", error);
+    
     return null;
   }
 }
@@ -110,7 +110,6 @@ export default function RootLayout({
   //         }
   //       })
   //       .catch((error) => {
-  //         console.error("Error fetching user data:", error);
   //       });
   //   }
   // }, [session]);
@@ -120,7 +119,7 @@ export default function RootLayout({
     signOut({ callbackUrl: "/" });
   };
 
-  // console.log("Data", userData);
+
 
   return (
     <>

@@ -43,10 +43,6 @@ const Hero = () => {
       return alert("Please provide some input");
     }
 
-    //console.log(location.name.toString(),value)
-    //const locations = location.name;
-
-    //console.log("wwww",locations.indexOf("name",1))
 
     //const countryNames = locations.map((location: { name: any; }) => location.name);
 

@@ -189,7 +189,6 @@ const AddTour = () => {
   const handleUpdate = async (e: any) => {
     try {
       setLoading(true);
-      console.log(tourDetails);
       e.preventDefault();
       //   router.prefetch("/auth/login");
       const images = await Promise.all(

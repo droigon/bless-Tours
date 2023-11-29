@@ -46,7 +46,6 @@ const UpdateVendor = ({ data, id }: { data: FormInputs; id: string }) => {
   const [loading, setLoading] = useState(false);
   const [tourDetails, setTourDetails] = useState<FormInputs>();
 
-  console.log("tourDetails", tourDetails);
 
   const [tourPictures, setTourPictures] = useState<(File | string)[]>([""]);
 
@@ -60,8 +59,7 @@ const UpdateVendor = ({ data, id }: { data: FormInputs; id: string }) => {
     >
   ) => {
     const { name, value } = e.target;
-     
-    console.log("name", name, "vslue", value);
+    
   };
 
   

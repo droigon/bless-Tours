@@ -101,7 +101,6 @@ const Tour = async (id: string): Promise<PackageInfo> => {
 
 export default async function Page({ params }: { params: { id: string } }) {
   const data = await Tour(params.id);
-  console.log("listing data:", data);
 
   const tooltipStyle = {
     backgroundColor: "#3539E9",

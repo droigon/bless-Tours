@@ -43,7 +43,6 @@ const UserDataList: React.FC<{ data: PackageInfo[] }> = ({ data }) => {
   
 
   const handleDelete = async (userId: string) => {
-    console.log(userId);
     try {
         const response = await fetch(`${url}/api/v1/users/delete/`, {
         method: 'DELETE',
@@ -57,7 +56,6 @@ const UserDataList: React.FC<{ data: PackageInfo[] }> = ({ data }) => {
       const res = await response.json();
       if (res.statusCode !== 200) {
         
-        console.log("item",datas);
         setData(datas.filter(item => item._id !== userId))
 
         toast.success("Item deleted successfully");

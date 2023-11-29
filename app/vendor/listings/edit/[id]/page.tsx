@@ -56,13 +56,11 @@ const fetchTourData = async (id: string) => {
     const res: ApiResponse = await response.json();
     return res.data;
   } catch (error) {
-    console.error("Error fetching tour data:", error);
+
   }
 };
 
 export default async function Page({ params }: { params: { id: string } }) {
-  const session = await getServerSession();
-  console.log("session", session);
 
   const tourData = await fetchTourData(params.id);
 

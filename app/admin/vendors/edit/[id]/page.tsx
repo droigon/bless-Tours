@@ -1,4 +1,3 @@
-import { getServerSession } from "next-auth";
 import UpdateVendor from "@/components/admin-dashboard//UpdateVendor";
 import {url} from "@/utils/index";
 interface Field {
@@ -62,8 +61,7 @@ const fetchVendorData = async (id: string) => {
 };
 
 export default async function Page({ params }: { params: { id: string } }) {
-  const session = await getServerSession();
-  console.log("session", session);
+  
 
   const vendorData = await fetchVendorData(params.id);
 

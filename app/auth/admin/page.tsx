@@ -7,9 +7,6 @@ import { signIn } from "next-auth/react";
 import { useRef, useState } from "react";
 import { toast } from "react-toastify";
 
-import Button from "@/components/Button";
-import TextBox from "@/components/TextBox";
-
 interface IProps {
   searchParams?: { [key: string]: string | string[] | undefined };
 }
@@ -48,7 +45,6 @@ interface IProps {
         role:"admin",
         redirect: false,
       });
-      console.log("login result", result);
       if (result?.error) {
         throw new Error(result?.error);
       } else {

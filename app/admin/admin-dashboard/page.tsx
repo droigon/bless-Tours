@@ -21,15 +21,16 @@ import { useState } from "react";
 import {url} from "@/utils/index";
 
 interface PackageInfo {
-  _id: string;
-  FIRSTNAME: string;
-  LASTNAME: string;
-  EMAIL: string;
-  PROFILE_PICTURE: string;
-  PHONE_NUMBER: number;
-  IDENTITY: string;
-  PROFILE: string;
-  isVerified: boolean;
+    _id:string;
+    userId:string;
+    vendorId:string;
+    PROFILE_PICTURE:string;
+    location:string;
+    guests:number;
+    amount:number;
+    checkinDate:string;
+    checkoutDate:string;
+    status:string;
 } 
 
 interface ApiResponse {
@@ -42,7 +43,7 @@ const fetchUsers = async (page: number): Promise<ApiResponse> => {
   const token = session?.user.token;
 
   const response = await fetch(
-    `${url}/api/v1/booking/?page=${page!}&limit=6`, {
+    `https://blesstours.onrender.com/api/v1/booking/?page=${page!}&limit=6`, {
       headers: {
         'Content-Type': 'application/json',
         "x-admin-token": `${token!}`, 
@@ -98,9 +99,6 @@ export default async function Page() {
   ];
 
   const [page, setPage] = useState<number>(1);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const { data: session } = useSession();
-  const token = session?.user.token;
 
   let data: PackageInfo[] | null = null;
   let dataCount;
@@ -254,6 +252,7 @@ export default async function Page() {
               ) : (
                 data.map((packageInfo) => (
                   <PackageCard key={packageInfo._id} packageInfo={packageInfo} />
+                  //<BookListingList key={packageInfo._id} item={packageInfo} />
                 ))
               )}
               </tbody>

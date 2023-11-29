@@ -12,7 +12,6 @@ interface DeleteModalProps {
 }
 
 const DeleteModal: React.FC<DeleteModalProps> = ({ isOpen, onClose, onDelete,itemId }) => {
-console.log("item",itemId!)
   return (
     <>
     

@@ -67,7 +67,6 @@ const BookingForm = ({
         }
       );
       const res: any = await response.json();
-      console.log(res)
       if (res.statusCode == 201) {
         toast.success("Tour booked successfully");
         return res.data;
@@ -81,11 +80,6 @@ const BookingForm = ({
     }
   };
 
-  console.log("formData:", formData);
-
-  console.log("startDate", startDate, "endDate", endDate);
-
-  console.log(new Date(startDate!).getTime() / 1000);
 
   return (
     <div className="col-span-12 xl:col-span-4">

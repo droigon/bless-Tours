@@ -18,7 +18,6 @@ const LoginPage = ({ searchParams }: IProps) => {
   const email = useRef("");
   const pass = useRef("");
   const onSubmit = async () => {
-    console.log(email, pass);
     const result = await signIn("credentials", {
       email: email.current,
       password: pass.current,
@@ -26,7 +25,6 @@ const LoginPage = ({ searchParams }: IProps) => {
       callbackUrl: "/user/personal-info",
       role:"user"
     });
-    console.log("result", result);
   };
 
   return (

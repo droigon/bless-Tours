@@ -72,7 +72,7 @@ interface Itenary {
     const data: ApiResponse = await response.json();
     return data.data;
   } catch (error) {
-    console.error("Error fetching user data:", error);
+    
     return null;
   }
 }*/

@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef } from "react";
 import { useSession } from "next-auth/react";
-import Conversations from "@/components/conversations/Conversations";
+import Conversations from "../../../components/conversations/Conversations";
 async function fetchTour(tourId: string): Promise<any> {
   const response = await fetch(
     `https://blesstours.onrender.com/api/v1/tours/${tourId}`

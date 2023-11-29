@@ -14,7 +14,6 @@ import LangDropdown from "@/components/LangDropdown";
 import NotificationDropdown from "@/components/NotificationDropdown";
 import ProfileDropdown from "@/components/ProfileDropdown";
 import { MouseEvent, useState } from "react";
-import AnimateHeight from "react-animate-height";
 import { sidenavData } from "@/public/data/adminsidenav";
 
 export default function RootLayout({

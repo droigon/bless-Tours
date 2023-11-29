@@ -28,7 +28,7 @@ const VendorListingList = ({ item }: any) => {
   const { data: session } = useSession();
 
   const handleDelete = async (itemId: string) => {
-    console.log(itemId);
+    
     try {
       const response = await fetch(
         `${url}/api/v1/tours/delete/${itemId}`,

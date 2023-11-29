@@ -80,7 +80,7 @@ const fetchFeaturedPackages = async (id: string): Promise<PackageInfo[]> => {
 const PackageCard: React.FC<{ packageInfo: PackageInfo }> = ({
   packageInfo,
 }) => {
-  const { _id, NAME, DURATION, AMOUNT, GUESTS } = packageInfo;
+  const { _id, } = packageInfo;
 
   return <VendorListingList key={_id} item={packageInfo} />;
 };
@@ -88,11 +88,7 @@ const PackageCard: React.FC<{ packageInfo: PackageInfo }> = ({
 const Page: React.FC = async () => {
   //const page = () => {
 
-  const tooltipStyle = {
-    backgroundColor: "#3539E9",
-    color: "#fff",
-    borderRadius: "10px",
-  };
+
 
   const { data: session } = useSession();
   const id = session?.user.id;

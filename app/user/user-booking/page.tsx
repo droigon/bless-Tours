@@ -143,11 +143,9 @@ async function fetchBookingData(userId: string): Promise<BookingData[] > {
 
     const responseData: ApiResponse = await response.json();
 
-
-    console.log("response",responseData.data)
     return responseData.data;
   } catch (error) {
-    console.error('Error fetching user data:', error);
+    
     return [];
   }
 }
@@ -183,7 +181,6 @@ export default function Page( {
     book.status === 'completed'
   );
 
-  console.log("session",upcoming)
 
   
   
@@ -192,9 +189,7 @@ export default function Page( {
   useEffect(() => {
     if (session ) {
       const userId = session.user?.id || "";
-      //const tokenz = session.user?.token || "";
 
-      //console.log('data', userId)
       const fetchPackages = async (): Promise<void> => {
         try {
           setLoading(true);
@@ -203,7 +198,7 @@ export default function Page( {
           setPackages(data);
           setLoading(false);
         } catch (error) {
-          console.error('Error fetching packages:', error);
+          
           setLoading(false);
         }
       };
