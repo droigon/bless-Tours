@@ -56,7 +56,7 @@ const Category = () => {
                   Explore other Tours and <br /> Book with Confidence
                 </p>
                 <Link
-                  href="#"
+                  href="/tours?category=others"
                   className="rounded-full bg-white mt-4 p-6 inline-block text-black">
                   <ArrowUpRight />
                 </Link>

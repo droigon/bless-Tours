@@ -41,7 +41,6 @@ const SubmitForm = ({
     guests: number | null;
   }>({ guests: null });
 
-  const router = useRouter()
 
 
   const handleSubmit = async (
@@ -52,6 +51,7 @@ const SubmitForm = ({
     try {
       e.preventDefault();
       setLoading(true);
+      console.log( session?.user.token as string,"token")
       
       const response: any = await fetch(
         `${url}/api/v1/booking/add`,

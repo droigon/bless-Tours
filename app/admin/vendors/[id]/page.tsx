@@ -89,7 +89,7 @@ const BookingRow: React.FC<PackageInfo> = ({
     <td
       className="py-3 lg:py-4 px-2 
       lg:px-4">
-        <Link href={`tours/${_id}`}>
+        <Link href={`/admin/tours/${_id}`}>
       {NAME}
       </Link>
     </td>

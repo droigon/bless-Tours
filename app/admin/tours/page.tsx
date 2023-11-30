@@ -127,12 +127,7 @@ const PackageCard: React.FC<{ packageInfo: PackageInfo }> = ({
 
 
 const Page: React.FC = async () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [token, setToken] = useState("");
-  const { data: session } = useSession();
 
-  const [packages, setPackages] = useState<PackageInfo[]>([]);
-  
   const [page, setPage] = useState<number>(1);
   let data: PackageInfo[] | null = null;
   let dataCount;

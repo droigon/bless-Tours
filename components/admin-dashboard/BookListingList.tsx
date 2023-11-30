@@ -32,13 +32,13 @@ const BookListingList = ({ item }: any) => {
     checkinDate,
     checkoutDate,
     status,
-  } = item;
+  } = item || null;
   const { data: session } = useSession();
   const Router = useRouter();
 
   const handleDelete = async (userId: string) => {
     try {
-        const response = await fetch(`https://blesstours.onrender.com/api/v1/users/delete/${userId}`, {
+        const response = await fetch(`${url}/api/v1/users/delete/${userId}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -63,18 +63,22 @@ const BookListingList = ({ item }: any) => {
     }
   };
 
+  
   return (
     <tr
       key={_id}
       className="border-b border-dashed hover:bg-[var(--bg-1)] duration-300">
         <td className="py-3 lg:py-4 px-2">
-        <Link
-              href={`users/${userId}`}>
+        
+        
+        
+        <Link href={`users/${userId?._id}`}>
+        
         <Image
           className="rounded-full"
           width={60}
           height={60}
-          src={PROFILE_PICTURE ? (`${PROFILE_PICTURE}`)
+          src={userId?.PROFILE_PICTURE ? (`${userId?.PROFILE_PICTURE}`)
           : (
             ('/img/user-1.jpg')
           )}
@@ -83,13 +87,13 @@ const BookListingList = ({ item }: any) => {
         </Link>
         </td>
         <td className="py-3 lg:py-4 px-2">
-        <Link
-              href={`vendors/${vendorId}`}>
+        <Link href={`vendors/${vendorId?._id}`}>
+        
         <Image
           className="rounded-full"
           width={60}
           height={60}
-          src={PROFILE_PICTURE ? (`${PROFILE_PICTURE}`)
+          src={vendorId?.PROFILE_PICTURE ? (`${vendorId?.PROFILE_PICTURE}`)
           : (
             ('/img/user-1.jpg')
           )}
@@ -113,6 +117,7 @@ const BookListingList = ({ item }: any) => {
       </td>
       <td className="py-3 mt-4 lg:py-4 px-2 flex gap-2 items-center">
         <button className="text-secondary">
+            
             <Link href={`booking/${_id}`}>
              <EyeIcon className="w-5 h-5" />
         </Link>

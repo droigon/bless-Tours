@@ -153,20 +153,14 @@ export default async function Page() {
                 </tr>
               </thead>
               <tbody>
-
               
-              {!data ? (
-              <p>No user exists </p>
-            ) : (
-              data.map((packageInfo) => (
-                <PackageCard key={packageInfo._id} packageInfo={packageInfo} />
-              ))
-            )}
-        
-                 
-           
-
-
+                {!data ? (
+                <tr>No user exists </tr>
+                  ) : (
+                    data.map((packageInfo) => (
+                      <PackageCard key={packageInfo._id} packageInfo={packageInfo} />
+                    ))
+                  )}
              
               </tbody>
             </table>

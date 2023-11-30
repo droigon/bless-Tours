@@ -18,20 +18,20 @@ import CounterElement from "@/components/CounterElement";
 import BookListingList from "@/components/admin-dashboard/BookListingList";
 import { useSession } from "next-auth/react"
 import { useState } from "react";
+import PaginationControls from "@/components/PaginationControls";
 import {url} from "@/utils/index";
 
 interface PackageInfo {
-    _id:string;
-    userId:string;
-    vendorId:string;
-    PROFILE_PICTURE:string;
-    location:string;
-    guests:number;
-    amount:number;
-    checkinDate:string;
-    checkoutDate:string;
-    status:string;
-} 
+  _id: string;
+  FIRSTNAME: string;
+  LASTNAME: string;
+  EMAIL: string;
+  PROFILE_PICTURE: string;
+  PHONE_NUMBER: number;
+  IDENTITY: string;
+  PROFILE: string;
+  isVerified: boolean;
+}
 
 interface ApiResponse {
   data: PackageInfo[];
@@ -43,7 +43,7 @@ const fetchUsers = async (page: number): Promise<ApiResponse> => {
   const token = session?.user.token;
 
   const response = await fetch(
-    `https://blesstours.onrender.com/api/v1/booking/?page=${page!}&limit=6`, {
+    `${url}/api/v1/booking/?page=1}&limit=6`, {
       headers: {
         'Content-Type': 'application/json',
         "x-admin-token": `${token!}`, 
@@ -72,33 +72,8 @@ const PackageCard: React.FC<{ packageInfo: PackageInfo }> = ({
 export default async function Page() {
 
 
-  var options: ApexOptions = {
-    chart: {
-      type: "area",
-      toolbar: {
-        show: false,
-      },
-    },
-    colors: ["#363AED", "#37D279"],
-    dataLabels: {
-      enabled: false,
-    },
-    stroke: {
-      curve: "smooth",
-    },
-  };
-  var series = [
-    {
-      name: "Check In",
-      data: [31, 40, 28, 51, 42, 109, 100],
-    },
-    {
-      name: "Check Out",
-      data: [11, 32, 45, 32, 34, 52, 41],
-    },
-  ];
 
-  const [page, setPage] = useState<number>(1);
+  
 
   let data: PackageInfo[] | null = null;
   let dataCount;
@@ -111,8 +86,8 @@ export default async function Page() {
     <div className="bg-[var(--bg-2)]">
       <div className="flex items-center justify-between flex-wrap px-3 py-5 md:p-[30px] gap-5 lg:p-[60px] bg-[var(--dark)]">
         <h2 className="h2 text-white">Dashboard</h2>
-        <Link href="/add-property" className="btn-primary">
-          <PlusCircleIcon className="w-5 h-5" /> Add New Listing
+        <Link href="/admin/add-new-vendor" className="btn-primary">
+          <PlusCircleIcon className="w-5 h-5" /> Add New Vendor
         </Link>
       </div>
       {/* statisticts */}
@@ -176,50 +151,12 @@ export default async function Page() {
             </div>
           </div>
           <div>
-            <Chart options={options} height={350} type="area" series={series} />
+            
           </div>
         </div>
       </section>
 
-      {/* Stats */}
-      <div className="grid grid-cols-12 gap-4 lg:gap-6 px-4 lg:px-6 pt-4 lg:pt-6">
-        <div className="col-span-12 sm:col-span-6 border xl:col-span-4 xxl:col-span-3 flex flex-col justify-center items-center p-4 md:p-6 lg:p-8 rounded-2xl bg-white">
-          <div className="w-[200px] h-[200px] flex justify-center items-center rounded-full border-primary border-[14px]">
-            <h2 className="text-lg md:text-2xl md:font-semibold xxl:4xl xxl:font-semibold 3xl:text-[40px]">
-              <CounterElement end={8.6} decimals={1} />k
-            </h2>
-          </div>
-          <span className="text-2xl font-semibold mt-4">New Customers</span>
-          <span className="text-sm">Last 30 Days</span>
-        </div>
-        <div className="col-span-12 sm:col-span-6 border xl:col-span-4 xxl:col-span-3 flex flex-col justify-center items-center p-4 md:p-6 lg:p-8 rounded-2xl bg-white">
-          <div className="w-[200px] h-[200px] flex justify-center items-center rounded-full border-[#37D279] border-[14px]">
-            <h2 className="text-lg md:text-2xl md:font-semibold xxl:4xl xxl:font-semibold 3xl:text-[40px]">
-              <CounterElement end={66.5} decimals={1} />k
-            </h2>
-          </div>
-          <span className="text-2xl font-semibold mt-4">Total Customers</span>
-          <span className="text-sm">All Time</span>
-        </div>
-        <div className="col-span-12 sm:col-span-6 border xl:col-span-4 xxl:col-span-3 flex flex-col justify-center items-center p-4 md:p-6 lg:p-8 rounded-2xl bg-white">
-          <div className="w-[200px] h-[200px] flex justify-center items-center rounded-full border-[var(--tertiary)] border-[14px]">
-            <h2 className="text-lg md:text-2xl md:font-semibold xxl:4xl xxl:font-semibold 3xl:text-[40px]">
-              $ <CounterElement end={95} />k
-            </h2>
-          </div>
-          <span className="text-2xl font-semibold mt-4">Total Sales</span>
-          <span className="text-sm">Last 30 Days</span>
-        </div>
-        <div className="col-span-12 sm:col-span-6 border xl:col-span-4 xxl:col-span-3 flex flex-col justify-center items-center p-4 md:p-6 lg:p-8 rounded-2xl bg-white">
-          <div className="w-[200px] h-[200px] flex justify-center items-center rounded-full border-[#8A8DF5] border-[14px]">
-            <h2 className="text-lg md:text-2xl md:font-semibold xxl:4xl xxl:font-semibold 3xl:text-[40px]">
-              $ <CounterElement end={997} />k
-            </h2>
-          </div>
-          <span className="text-2xl font-semibold mt-4">Total Sales</span>
-          <span className="text-sm">All Time</span>
-        </div>
-      </div>
+   
 
       {/* Recent bookings */}
       <section className="bg-[var(--bg-2)] px-3 lg:px-6 pb-4 lg:pb-6 mt-4 lg:mt-6">
@@ -252,12 +189,11 @@ export default async function Page() {
               ) : (
                 data.map((packageInfo) => (
                   <PackageCard key={packageInfo._id} packageInfo={packageInfo} />
-                  //<BookListingList key={packageInfo._id} item={packageInfo} />
                 ))
               )}
               </tbody>
             </table>
-            <Pagination />
+       
           </div>
         </div>
       </section>

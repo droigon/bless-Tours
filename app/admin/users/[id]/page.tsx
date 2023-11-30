@@ -142,17 +142,19 @@ const fetchBookings = async (page: string): Promise<ApiResponse> => {
   return responseData;
 };
 
-
-
-export default async function Page({ params }: { params: { id: string } }) {
-  const userData: UserProps = await getUser(params.id);
+export default async function Page({ params }: { params?: { id: string } }) {
+  const userId = params?.id || ''; // Default to an empty string if params or id is undefined
+  const userData: UserProps = await getUser(userId);
+  // Rest of your code...
+  
+  
   
 
 
   let data: BookingInfo[] | null = [];
   let dataCount;
   
-  const result = await fetchBookings(params.id!);
+  const result = await fetchBookings(params?.id!);
   data = result.result;
   dataCount = result.count;
   
@@ -178,7 +180,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                   width={80}
                   height={80}
                   className="rounded-full"
-                  src={userData.PROFILE_PICTURE ? (`${userData.PROFILE_PICTURE}`)
+                  src={userData.PROFILE_PICTURE ? (`${userData?.PROFILE_PICTURE}`)
                     : (
                       ('/img/user-1.jpg')
                     )}

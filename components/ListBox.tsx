@@ -4,6 +4,7 @@ import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import { useSession } from "next-auth/react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import {url} from "@/utils/index";
 
 interface HeadlessListProps {
   initialValue: string;
@@ -34,11 +35,10 @@ export default function HeadlessList({ initialValue, _id }: HeadlessListProps) {
     }
     
 
-    console.log("Selected value:", value); 
 
     
     try {
-        const response = await fetch(`https://blesstours.onrender.com/api/v1/booking/${value}/${_id!}`, {
+        const response = await fetch(`${url}/api/v1/booking/${value!}/${_id!}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
